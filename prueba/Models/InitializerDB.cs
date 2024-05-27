@@ -13,6 +13,12 @@
                 // Guardar los cambios en la base de datos
                 context.SaveChanges();
             }
+            else {
+                context.Clients.Add(new Client { FirstName = "Laureano", LastName = "Adreotti", Email = "laureano@mindhub.com", Password = "laureanoA2024?*" });
+                context.Clients.Add(new Client { FirstName = "Manuel", LastName = "Figueira", Email = "manuel@mindhub.com", Password = "manuelF2024?*" });
+
+                context.SaveChanges() ;
+            }
         }
     }
 }
