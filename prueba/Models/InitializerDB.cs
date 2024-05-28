@@ -18,6 +18,30 @@
                 context.SaveChanges();
             };
 
+            if (!context.Accounts.Any()) {
+                var cliente = context.Clients.FirstOrDefault(cl => cl.Email == "laureano@mindhub.com");
+                
+                if (cliente != null) { //si no encuentro ningun cliente
+                    var accounts = new Account[] {
+
+                        new Account{Number = "VIN001",
+                            CreationDate=DateTime.Now,
+                            ClientId = cliente.Id,
+                            Balance=30000
+                        },
+
+                        new Account{Number = "VIN001",
+                            CreationDate=DateTime.Now,
+                            ClientId = cliente.Id,
+                            Balance=30000 
+                        }
+
+                    };
+
+
+                }
+            }
+
         }
 
     }

@@ -7,5 +7,6 @@ namespace prueba.Models
         public HomeBankingContext(DbContextOptions<HomeBankingContext> options) : base(options) { }
 
         public DbSet<Client> Clients { get; set; }
+        public DbSet<Account> Accounts { get; set; }
     }
 }

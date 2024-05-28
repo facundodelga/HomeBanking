@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using prueba.Models;
 
@@ -11,9 +12,11 @@ using prueba.Models;
 namespace prueba.Migrations
 {
     [DbContext(typeof(HomeBankingContext))]
-    partial class HomeBankingContextModelSnapshot : ModelSnapshot
+    [Migration("20240528151818_InitialCreat")]
+    partial class InitialCreat
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
