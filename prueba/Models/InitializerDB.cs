@@ -21,7 +21,7 @@
             if (!context.Accounts.Any()) {
                 var cliente = context.Clients.FirstOrDefault(cl => cl.Email == "laureano@mindhub.com");
                 
-                if (cliente != null) { //si no encuentro ningun cliente
+                if (cliente != null) { //si encuentro el cliente
                     var accounts = new Account[] {
 
                         new Account{Number = "VIN001",
@@ -30,14 +30,16 @@
                             Balance=30000
                         },
 
-                        new Account{Number = "VIN001",
+                        new Account{Number = "VIN002",
                             CreationDate=DateTime.Now,
                             ClientId = cliente.Id,
-                            Balance=30000 
+                            Balance=10000
                         }
 
                     };
 
+                    context.Accounts.AddRange(accounts);
+                    context.SaveChanges();
 
                 }
             }
