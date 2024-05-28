@@ -3,19 +3,15 @@ using Microsoft.EntityFrameworkCore.Query;
 using prueba.Models;
 using System.Linq.Expressions;
 
-namespace prueba.Repository
-{
-    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class
-    {   
+namespace prueba.Repository {
+    public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : class {
         protected HomeBankingContext RepositoryContext { get; set; }
 
-        protected RepositoryBase(HomeBankingContext repository)
-        {
+        protected RepositoryBase(HomeBankingContext repository) {
             this.RepositoryContext = repository;
         }
 
-        public IQueryable<T> FindAll()
-        {
+        public IQueryable<T> FindAll() {
             return this.RepositoryContext.Set<T>().AsNoTrackingWithIdentityResolution();
         }
 
@@ -38,7 +34,7 @@ namespace prueba.Repository
         // Aplica la condición proporcionada en expression al IQueryable<T>, filtrando los elementos
         // que no cumplen con la condición
         public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression) {
-            
+
             return this.RepositoryContext.Set<T>().Where(expression).AsNoTrackingWithIdentityResolution();
             //AsNoTrackingWithIdentityResolution evita que Entity Framework realice un seguimiento de los cambios
             // en los objetos devueltos, lo que puede mejorar el rendimiento en ciertas situaciones
@@ -56,8 +52,7 @@ namespace prueba.Repository
             this.RepositoryContext.Set<T>().Update(entity);
         }
 
-        public void SaveChanges()
-        {
+        public void SaveChanges() {
             this.RepositoryContext.SaveChanges();
         }
 

@@ -3,9 +3,8 @@
 namespace prueba.Repository.Implementations {
     public class ClientRepository : RepositoryBase<Client>, IClientRepository {
 
-        public ClientRepository(HomeBankingContext repository) : base(repository)
-        {
-            
+        public ClientRepository(HomeBankingContext repository) : base(repository) {
+
         }
 
         public Client FindById(long id) {

@@ -2,7 +2,7 @@
     public class InitializerDB {
         public static void Main(HomeBankingContext context) {
 
-            
+
             if (!context.Clients.Any()) { // Si la tabla esta vacia entro
                 var clients = new Client[]
                 {
@@ -20,7 +20,7 @@
 
             if (!context.Accounts.Any()) {
                 var cliente = context.Clients.FirstOrDefault(cl => cl.Email == "laureano@mindhub.com");
-                
+
                 if (cliente != null) { //si encuentro el cliente
                     var accounts = new Account[] {
 
