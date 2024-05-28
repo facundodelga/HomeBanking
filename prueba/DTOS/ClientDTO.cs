@@ -1,4 +1,6 @@
-﻿using prueba.Models;
+﻿using Microsoft.IdentityModel.Tokens;
+using prueba.Models;
+using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 namespace prueba.DTOS {
@@ -8,7 +10,6 @@ namespace prueba.DTOS {
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
         public ICollection<AccountDTO> Accounts { get; set; }
 
         public ClientDTO(Client client) {
@@ -17,9 +18,10 @@ namespace prueba.DTOS {
             LastName = client.LastName;
             Email = client.Email;
 
-            foreach (var account in client.Accounts) {
-                this.Accounts.Add(new AccountDTO(account));
-            }
+            Console.WriteLine(client.Accounts.ToArray());
+
+            Accounts = client.Accounts.Select(ac => new AccountDTO(ac)).ToList();
+
         }
     }
 }
