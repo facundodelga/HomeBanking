@@ -1,6 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using HomeBanking.DTOS;
 using prueba.Models;
-using System.ComponentModel;
 using System.Text.Json.Serialization;
 
 namespace prueba.DTOS {
@@ -10,7 +9,7 @@ namespace prueba.DTOS {
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public ICollection<AccountDTO> Accounts { get; set; }
+        public ICollection<AccountClientDTO> Accounts { get; set; }
 
         public ClientDTO(Client client) {
             Id = client.Id;
@@ -20,7 +19,7 @@ namespace prueba.DTOS {
 
             Console.WriteLine(client.Accounts.ToArray());
 
-            Accounts = client.Accounts.Select(ac => new AccountDTO(ac)).ToList();
+            Accounts = client.Accounts.Select(ac => new AccountClientDTO(ac)).ToList();
 
         }
     }

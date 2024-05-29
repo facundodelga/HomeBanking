@@ -1,4 +1,6 @@
-﻿namespace prueba.Models {
+﻿using HomeBanking.Models;
+
+namespace prueba.Models {
     public class InitializerDB {
         public static void Main(HomeBankingContext context) {
 
@@ -41,6 +43,49 @@
                     context.Accounts.AddRange(accounts);
                     context.SaveChanges();
 
+                }
+            }
+
+            if (!context.Transactions.Any()) {
+                var cuenta = context.Accounts.FirstOrDefault(ac => ac.Number == "VIN001");
+
+                if (cuenta != null) {
+                    var transacciones = new Transaction[] {
+                        new Transaction{
+                            Amount = 1000,
+                            Type = TransactionType.CREDIT,
+                            AccountId = cuenta.Id,
+                            Date = DateTime.Now.AddHours(-10),
+                            Description = "Transferencia de Laureano"
+                        },
+
+                        new Transaction{
+                            Amount = -1700,
+                            Type = TransactionType.DEBIT,
+                            AccountId = cuenta.Id,
+                            Date= DateTime.Now.AddHours(-4),
+                            Description = "Pago servicio Youtube"
+                        },
+
+                        new Transaction {
+                            Amount = -10000,
+                            Type = TransactionType.DEBIT,
+                            AccountId = cuenta.Id,
+                            Date = DateTime.Now.AddHours(-2),
+                            Description = "Pago artTicket:Asspera"
+                        },
+
+                        new Transaction {
+                            Amount = 150000,
+                            Type = TransactionType.CREDIT,
+                            AccountId = cuenta.Id,
+                            Date = DateTime.Now.AddDays(1).AddHours(4),
+                            Description = "Devolucion de pago MeLi"
+                        }
+                    };
+
+                    context.Transactions.AddRange(transacciones);
+                    context.SaveChanges();
                 }
             }
 
