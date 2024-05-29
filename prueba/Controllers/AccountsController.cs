@@ -33,5 +33,20 @@ namespace HomeBanking.Controllers {
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpGet("{id}")]
+        public IActionResult Get(long id) {
+            try {
+                var account = _accountRepository.FindById(id);
+                if (account == null) {
+                    return Forbid();
+                }
+                var accountDTO = new AccountDTO(account);
+                return Ok(accountDTO);
+            }
+            catch (Exception ex) {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

@@ -1,0 +1,31 @@
+.account{
+    background: linear-gradient(45deg,#ee0979,#ff6a00);
+    color: white;
+    box-shadow: 1px 1px 5px black;
+}
+
+.account:hover{
+    box-shadow: 2px 2px 10px black;
+}
+
+.account-details-header{
+    background: linear-gradient(45deg,#ee0979,#ff6a00);
+    color: white;
+}
+
+.account-balance{
+    font-size: 2em;
+    margin: 0px;
+}
+
+.account-link{
+    text-decoration: none;
+}
+
+.credit-transaction{
+    color: green;
+}
+
+.debit-transaction{
+   color: red;
+}
