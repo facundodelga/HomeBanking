@@ -8,7 +8,7 @@ using prueba.Models;
 
 #nullable disable
 
-namespace prueba.Migrations
+namespace HomeBanking.Migrations
 {
     [DbContext(typeof(HomeBankingContext))]
     partial class HomeBankingContextModelSnapshot : ModelSnapshot

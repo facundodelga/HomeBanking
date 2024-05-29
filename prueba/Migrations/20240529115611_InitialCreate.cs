@@ -1,15 +1,36 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace prueba.Migrations {
+namespace HomeBanking.Migrations
+{
     /// <inheritdoc />
-    public partial class InitialCreat : Migration {
+    public partial class InitialCreate : Migration
+    {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder) {
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.CreateTable(
+                name: "Clients",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "bigint", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Password = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Clients", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Accounts",
-                columns: table => new {
+                columns: table => new
+                {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Number = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -17,7 +38,8 @@ namespace prueba.Migrations {
                     Balance = table.Column<double>(type: "float", nullable: false),
                     ClientId = table.Column<long>(type: "bigint", nullable: false)
                 },
-                constraints: table => {
+                constraints: table =>
+                {
                     table.PrimaryKey("PK_Accounts", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Accounts_Clients_ClientId",
@@ -34,9 +56,13 @@ namespace prueba.Migrations {
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder) {
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
             migrationBuilder.DropTable(
                 name: "Accounts");
+
+            migrationBuilder.DropTable(
+                name: "Clients");
         }
     }
 }

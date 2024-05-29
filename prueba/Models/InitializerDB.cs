@@ -6,7 +6,7 @@
             if (!context.Clients.Any()) { // Si la tabla esta vacia entro
                 var clients = new Client[]
                 {
-                    new Client{FirstName="Eduardo",LastName="Mendoza",Email="edu@gmail.com",Password="123"},
+                    new Client{FirstName="Victor",LastName="Coronado",Email="vcoronado@gmail.com",Password="123"},
                     new Client{FirstName="Juan",LastName="Perez",Email="juan@gmail.com",Password="123"},
                     new Client{FirstName="Maria",LastName="Lopez",Email="maria@gmail.com",Password="123" },
                     new Client { FirstName = "Laureano", LastName = "Adreotti", Email = "laureano@mindhub.com", Password = "laureanoA2024?*" },
@@ -19,7 +19,7 @@
             };
 
             if (!context.Accounts.Any()) {
-                var cliente = context.Clients.FirstOrDefault(cl => cl.Email == "laureano@mindhub.com");
+                var cliente = context.Clients.FirstOrDefault(cl => cl.Email == "vcoronado@gmail.com");
 
                 if (cliente != null) { //si encuentro el cliente
                     var accounts = new Account[] {

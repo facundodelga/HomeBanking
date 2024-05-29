@@ -9,11 +9,11 @@ using prueba.Models;
 
 #nullable disable
 
-namespace prueba.Migrations
+namespace HomeBanking.Migrations
 {
     [DbContext(typeof(HomeBankingContext))]
-    [Migration("20240528152835_AddAccountEntity")]
-    partial class AddAccountEntity
+    [Migration("20240529115611_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
