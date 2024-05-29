@@ -1,3 +1,5 @@
+using HomeBanking.Repository;
+using HomeBanking.Repository.Implementations;
 using Microsoft.EntityFrameworkCore;
 using prueba.Models;
 using prueba.Repository;
@@ -13,6 +15,7 @@ builder.Services.AddDbContext<HomeBankingContext>(options =>
 ));
 
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 
 var app = builder.Build();
 
