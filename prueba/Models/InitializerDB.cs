@@ -1,4 +1,6 @@
-﻿namespace prueba.Models {
+﻿using HomeBanking.Models;
+
+namespace prueba.Models {
     public class InitializerDB {
         public static void Main(HomeBankingContext context) {
 
@@ -41,6 +43,20 @@
                     context.Accounts.AddRange(accounts);
                     context.SaveChanges();
 
+                }
+            }
+
+            if (!context.Transactions.Any()) {
+                var cuenta = context.Accounts.FirstOrDefault(ac => ac.Number == "VIN001");
+
+                if (cuenta != null) {
+                    var transacciones = new Transaction[] {
+                        new Transaction{
+                            Amount = 1000,
+                            AccountId = cuenta.Id,
+                            Date = DateTime.Now.AddHours(-10),
+                        }
+                    }
                 }
             }
 

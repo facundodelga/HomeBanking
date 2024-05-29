@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using HomeBanking.Models;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace prueba.Models {
     public class HomeBankingContext : DbContext {
@@ -6,5 +8,6 @@ namespace prueba.Models {
 
         public DbSet<Client> Clients { get; set; }
         public DbSet<Account> Accounts { get; set; }
+        public DbSet<Transaction> Transactions { get; set; }
     }
 }
