@@ -44,6 +44,7 @@ namespace prueba.Controllers {
                 return Ok(clientDTO);
             }
             catch (Exception ex) {
+                
                 return StatusCode(500, ex.Message);
             }
         }
