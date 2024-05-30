@@ -6,7 +6,7 @@ namespace HomeBanking.Repository {
 
         
             IEnumerable<Transaction> GetAllTransactions();
-            void Save(Transaction account);
+            void Save(Transaction transaction);
             Transaction FindById(long id);
 
         
