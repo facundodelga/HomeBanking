@@ -29,8 +29,3 @@
 .debit-transaction{
    color: red;
 }
-
-.loan{
-    background: linear-gradient(45deg,#ee09cf,#0026ff);
-    color: white;
-}
