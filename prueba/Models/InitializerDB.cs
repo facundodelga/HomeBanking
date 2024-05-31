@@ -115,6 +115,80 @@ namespace prueba.Models {
 
             }
 
+            if (!context.Cards.Any()) {
+                var client = context.Clients.FirstOrDefault(c => c.Email == "vcoronado@gmail.com");
+
+                if (client != null) {
+                    var cards = new Card[] {
+                         new Card {
+                            ClientId= client.Id,
+                            CardHolder = client.FirstName + " " + client.LastName,
+                            Type = CardType.DEBIT,
+                            Color = CardColor.GOLD,
+                            Number = "3325-6745-7876-4445",
+                            Cvv = 990,
+                            FromDate= DateTime.Now,
+                            ThruDate= DateTime.Now.AddYears(4),
+                        },
+                        new Card {
+                            ClientId= client.Id,
+                            CardHolder = client.FirstName + " " + client.LastName,
+                            Type = CardType.CREDIT,
+                            Color = CardColor.TITANIUM,
+                            Number = "2234-6745-552-7888",
+                            Cvv = 750,
+                            FromDate= DateTime.Now,
+                            ThruDate= DateTime.Now.AddYears(5),
+                        },
+                    };
+
+                    context.Cards.AddRange(cards);
+                }
+
+                var client2 = context.Clients.FirstOrDefault(c => c.Email == "manuel@mindhub.com");
+
+                if (client2 != null) {
+                    var cards = new Card[] {
+                        new Card {
+                            ClientId = client2.Id,
+                            CardHolder = client2.FirstName + " " + client2.LastName,
+                            Type = CardType.DEBIT,
+                            Color = CardColor.TITANIUM,
+                            Number = "3555-1235-7906-2245",
+                            Cvv = 272,
+                            FromDate = DateTime.Now.AddDays(1),
+                            ThruDate = DateTime.Now.AddYears(5),
+                        },
+
+                        new Card {
+                            ClientId = client2.Id,
+                            CardHolder = client2.FirstName + " " + client2.LastName,
+                            Type = CardType.CREDIT,
+                            Color = CardColor.SILVER,
+                            Number = "9090-2315-7456-3945",
+                            Cvv = 909,
+                            FromDate = DateTime.Now.AddMonths(1),
+                            ThruDate = DateTime.Now.AddYears(3),
+                        },
+
+                        new Card {
+                            ClientId = client2.Id,
+                            CardHolder = client2.FirstName + " " + client2.LastName,
+                            Type = CardType.CREDIT,
+                            Color = CardColor.GOLD,
+                            Number = "4390-8595-8686-2245",
+                            Cvv = 848,
+                            FromDate = DateTime.Now.AddMonths(1),
+                            ThruDate = DateTime.Now.AddYears(3),
+                        }
+                    };
+
+                    context.Cards.AddRange(cards);
+                }
+
+                context.SaveChanges();
+            }
+
         }
 
         public static void creoCuentas(HomeBankingContext context) {
