@@ -11,6 +11,7 @@ namespace prueba.DTOS {
         public string Email { get; set; }
         public ICollection<AccountClientDTO> Accounts { get; set; }
         public ICollection<ClientLoanDTO> Loans { get; set; }
+        public ICollection<CardDTO> Cards { get; set; }
 
         public ClientDTO(Client client) {
             Id = client.Id;
@@ -22,6 +23,7 @@ namespace prueba.DTOS {
 
             Accounts = client.Accounts.Select(ac => new AccountClientDTO(ac)).ToList();
             Loans = client.ClientLoans.Select(cl => new ClientLoanDTO(cl)).ToList();
+            Cards = client.Cards.Select(card => new CardDTO(card)).ToList();
 
         }
     }
