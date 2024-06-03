@@ -12,119 +12,137 @@
 </head>
 <body>
 
-    <div class="container bg-light" id="app">
-        <div class="row mt-5">
-            <div class="col-12 col-md-2">
-                <div class="bg-light">
-                    <a href="/accounts.html" class="d-flex flex-column mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-                        <img class="menu-logo" src="img/logo vinotinto.png">
-                        <span class="fs-5">Banco Vinotinto</span>
-                    </a>
-                    <hr>
-                    <ul class="nav nav-pills flex-column mb-auto">
-                        <li class="nav-item">
-                            <a href="/accounts.html" class="nav-link link-dark">
-                                <i class="bi bi-inboxes"></i>
-                                Accounts
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/cards.html" class="nav-link active">
-                                <i class="bi bi-credit-card"></i>
-                                Cards
-                            </a>
-                        </li>
-                    </ul>
+    <div id="app">
+        <div class="toast-container position-absolute p-3 top-0 end-0" id="toastPlacement">
+            <div id="danger-toast" data-bs-delay="2000" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ errorMsg }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
             </div>
-            <div class="col">
-                <div class="row">
-                    <div class="col">
-                        <h1 class="display-1">{{ clientInfo.firstName }} {{ clientInfo.lastName }}</h1>
+        </div>
+        <div class="container bg-light">
+            <div class="row mt-5">
+                <div class="col-12 col-md-2">
+                    <div class="bg-light">
+                        <a href="/accounts.html"
+                            class="d-flex flex-column align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                            <img class="menu-logo" src="img/logo vinotinto.png">
+                            <span class="fs-5">Banco Vinotinto</span>
+                        </a>
+                        <hr>
+                        <ul class="nav nav-pills flex-column mb-auto">
+                            <li class="nav-item">
+                                <a href="/accounts.html" class="nav-link link-dark">
+                                    <i class="bi bi-inboxes"></i>
+                                    Accounts
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/cards.html" class="nav-link active">
+                                    <i class="bi bi-credit-card"></i>
+                                    Cards
+                                </a>
+                            </li>
+                        </ul>
+                        <hr>
+                        <ul class="nav nav-pills flex-column mb-auto">
+                            <button class="btn btn-danger img-fluid" v-on:click="signOut">Sign out</button>
+                        </ul>
                     </div>
                 </div>
-                <div class="row mt-3">
-                    <div class="col">
-                        <h2 class="display-6">Debit Cards</h2>
-                        <span class="small" v-if="debitCards.length <= 0">No debit cards</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div v-for="card in debitCards" class="plastic-card col-12 col-md-3 mt-2">
-                        <div v-bind:class="['plastic-card__front', 'plastic-card__part', card.color.toLowerCase() +'-plastic-card']">
-                            <div class="plastic-card__square">
-                                <span class="plastic-card__label">{{ card.type}} {{ card.color }}</span>
-                            </div>
-                            <img class="plastic-card__front-logo plastic-card__logo"
-                                 src="img/logo vinotinto.png">
-                            <p class="plastic-card_numer">{{ card.number}}</p>
-                            <div class="plastic-card__space-60">
-                                <span class="plastic-card__label">card holder</span>
-                                <p class="plastic-card__info">{{ card.cardHolder }}</p>
-                            </div>
-                            <div class="plastic-card__space-25">
-                                <span class="plastic-card__label">Expires</span>
-                                <p class="plastic-card__info">{{ formatDate(card.thruDate) }}</p>
-                            </div>
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <h1 class="display-1">{{ clientInfo.firstName }} {{ clientInfo.lastName }}</h1>
                         </div>
-
-                        <div v-bind:class="['plastic-card__back', 'plastic-card__part', card.color.toLowerCase() +'-plastic-card']">
-                            <div class="plastic-card__black-line"></div>
-                            <div class="plastic-card__back-content">
-                                <div class="plastic-card__secret">
-                                    <p class="plastic-card__secret--last">{{ card.cvv}}</p>
-                                </div>
-                                <div class="plastic-card__back-square plastic-card__square">
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <h2 class="display-6">Debit Cards</h2>
+                            <span class="small" v-if="debitCards.length <= 0">No debit cards</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div v-for="card in debitCards" class="plastic-card col-12 col-md-3 mt-2">
+                            <div
+                                v-bind:class="['plastic-card__front', 'plastic-card__part', card.color.toLowerCase() +'-plastic-card']">
+                                <div class="plastic-card__square">
                                     <span class="plastic-card__label">{{ card.type}} {{ card.color }}</span>
                                 </div>
-                                <img class="plastic-card__back-logo plastic-card__logo"
-                                     src="img/logo vinotinto.png">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col">
-                        <h2 class="display-6">Credit Cards</h2>
-                        <span class="small" v-if="creditCards.length <= 0">No credit cards</span>
-                    </div>
-                </div>
-                <div class="row">
-                    <div v-for="card in creditCards" class="plastic-card col-12 col-md-3 mt-2">
-                        <div v-bind:class="['plastic-card__front', 'plastic-card__part', card.color.toLowerCase() +'-plastic-card']">
-                            <div class="plastic-card__square">
-                                <span class="plastic-card__label">{{ card.type}} {{ card.color }}</span>
-                            </div>
-                            <img class="plastic-card__front-logo plastic-card__logo"
-                                 src="img/logo vinotinto.png">
-                            <p class="plastic-card_numer">{{ card.number}}</p>
-                            <div class="plastic-card__space-60">
-                                <span class="plastic-card__label">card holder</span>
-                                <p class="plastic-card__info">{{ card.cardHolder }}</p>
-                            </div>
-                            <div class="plastic-card__space-25">
-                                <span class="plastic-card__label">Expires</span>
-                                <p class="plastic-card__info">{{ formatDate(card.thruDate) }}</p>
-                            </div>
-                        </div>
-
-                        <div v-bind:class="['plastic-card__back', 'plastic-card__part', card.color.toLowerCase() +'-plastic-card']">
-                            <div class="plastic-card__black-line"></div>
-                            <div class="plastic-card__back-content">
-                                <div class="plastic-card__secret">
-                                    <p class="plastic-card__secret--last">{{ card.cvv}}</p>
+                                <img class="plastic-card__front-logo plastic-card__logo" src="img/logo vinotinto.png">
+                                <p class="plastic-card_numer">{{ card.number}}</p>
+                                <div class="plastic-card__space-60">
+                                    <span class="plastic-card__label">card holder</span>
+                                    <p class="plastic-card__info">{{ card.cardHolder }}</p>
                                 </div>
-                                <div class="plastic-card__back-square plastic-card__square">
+                                <div class="plastic-card__space-25">
+                                    <span class="plastic-card__label">Expires</span>
+                                    <p class="plastic-card__info">{{ formatDate(card.thruDate) }}</p>
+                                </div>
+                            </div>
+        
+                            <div
+                                v-bind:class="['plastic-card__back', 'plastic-card__part', card.color.toLowerCase() +'-plastic-card']">
+                                <div class="plastic-card__black-line"></div>
+                                <div class="plastic-card__back-content">
+                                    <div class="plastic-card__secret">
+                                        <p class="plastic-card__secret--last">{{ card.cvv}}</p>
+                                    </div>
+                                    <div class="plastic-card__back-square plastic-card__square">
+                                        <span class="plastic-card__label">{{ card.type}} {{ card.color }}</span>
+                                    </div>
+                                    <img class="plastic-card__back-logo plastic-card__logo" src="img/logo vinotinto.png">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <h2 class="display-6">Credit Cards</h2>
+                            <span class="small" v-if="creditCards.length <= 0">No credit cards</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div v-for="card in creditCards" class="plastic-card col-12 col-md-3 mt-2">
+                            <div
+                                v-bind:class="['plastic-card__front', 'plastic-card__part', card.color.toLowerCase() +'-plastic-card']">
+                                <div class="plastic-card__square">
                                     <span class="plastic-card__label">{{ card.type}} {{ card.color }}</span>
                                 </div>
-                                <img class="plastic-card__back-logo plastic-card__logo"
-                                     src="img/logo vinotinto.png">
+                                <img class="plastic-card__front-logo plastic-card__logo" src="img/logo vinotinto.png">
+                                <p class="plastic-card_numer">{{ card.number}}</p>
+                                <div class="plastic-card__space-60">
+                                    <span class="plastic-card__label">card holder</span>
+                                    <p class="plastic-card__info">{{ card.cardHolder }}</p>
+                                </div>
+                                <div class="plastic-card__space-25">
+                                    <span class="plastic-card__label">Expires</span>
+                                    <p class="plastic-card__info">{{ formatDate(card.thruDate) }}</p>
+                                </div>
+                            </div>
+        
+                            <div
+                                v-bind:class="['plastic-card__back', 'plastic-card__part', card.color.toLowerCase() +'-plastic-card']">
+                                <div class="plastic-card__black-line"></div>
+                                <div class="plastic-card__back-content">
+                                    <div class="plastic-card__secret">
+                                        <p class="plastic-card__secret--last">{{ card.cvv}}</p>
+                                    </div>
+                                    <div class="plastic-card__back-square plastic-card__square">
+                                        <span class="plastic-card__label">{{ card.type}} {{ card.color }}</span>
+                                    </div>
+                                    <img class="plastic-card__back-logo plastic-card__logo" src="img/logo vinotinto.png">
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>

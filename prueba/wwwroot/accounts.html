@@ -9,76 +9,95 @@
     <title>Accounts</title>
 </head>
 <body>
-    <div class="container bg-light" id="app">
-        <div class="row mt-5">
-            <div class="col-12 col-md-2">
-                <div class="bg-light">
-                    <a href="/accounts.html" class="d-flex flex-column mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
-                        <img class="menu-logo" src="img/logo vinotinto.png">
-                        <span class="fs-5">Banco Vinotinto</span>
-                    </a>
-                    <hr>
-                    <ul class="nav nav-pills flex-column mb-auto">
-                        <li class="nav-item">
-                            <a href="/accounts.html" class="nav-link active">
-                                <i class="bi bi-inboxes"></i>
-                                Accounts
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/cards.html" class="nav-link link-dark">
-                                <i class="bi bi-credit-card"></i>
-                                Cards
-                            </a>
-                        </li>
-                    </ul>
+    <div id="app">
+        <div class="toast-container position-absolute p-3 top-0 end-0" id="toastPlacement">
+            <div id="danger-toast" data-bs-delay="2000" class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body">
+                        {{ errorMsg }}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                 </div>
             </div>
-
-            <div class="col">
-                <div class="row">
-                    <div class="col">
-                        <h1 class="display-1">{{ clientInfo.firstName }} {{ clientInfo.lastName }}</h1>
-                    </div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col">
-                        <h2 class="display-6">Accounts</h2>
-                    </div>
-                </div>
-                <div class="row">
-                    <div v-for="account in clientInfo.accounts" class="col-12 col-md-3 mt-2">
-                        <a class="account-link" v-bind:href="'/account.html?id='+account.id">
-                            <div class="card border-0 account">
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ account.number }}</h5>
-                                    <p class="card-text"> {{ formatDate(account.creationDate) }}</p>
-                                    <p class="text-center lead account-balance"> ${{ account.balance }} </p>
-                                </div>
-                            </div>
+        </div> 
+        <div class="container bg-light">
+            <div class="row mt-5">
+                <div class="col-12 col-md-2">
+                    <div class="bg-light">
+                        <a href="/accounts.html"
+                            class="d-flex flex-column
+                            align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                            <img class="menu-logo" src="img/logo vinotinto.png">
+                            <span class="fs-5">Banco Vinotinto</span>
                         </a>
+                        <hr>
+                        <ul class="nav nav-pills flex-column mb-auto">
+                            <li class="nav-item">
+                                <a href="/accounts.html" class="nav-link active">
+                                    <i class="bi bi-inboxes"></i>
+                                    Accounts
+                                </a>
+                            </li>
+                            <li>
+                                <a href="/cards.html" class="nav-link link-dark">
+                                    <i class="bi bi-credit-card"></i>
+                                    Cards
+                                </a>
+                            </li>
+                        </ul>
+                        <hr>
+                        <ul class="nav nav-pills flex-column mb-auto">
+                            <button class="btn btn-danger img-fluid" v-on:click="signOut">Sign out</button>
+                        </ul>                        
                     </div>
                 </div>
-
-                <div class="row mt-3">
-                    <div class="col">
-                        <h2 class="display-6">Credits</h2>
+        
+                <div class="col">
+                    <div class="row">
+                        <div class="col">
+                            <h1 class="display-1">{{ clientInfo.firstName }} {{ clientInfo.lastName }}</h1>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div v-for="credit in clientInfo.loans" class="col-12 col-md-3 mt-2">
-                        <div class="card border-0 credit">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ credit.name }}</h5>
-                                <p class="card-text"> payments: {{ credit.payments}}</p>
-                                <p class="text-center lead account-balance"> ${{ credit.amount }} </p>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <h2 class="display-6">Accounts</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div v-for="account in clientInfo.accounts" class="col-12 col-md-3 mt-2">
+                            <a class="account-link" v-bind:href="'/account.html?id='+account.id">
+                                <div class="card border-0 account">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ account.number }}</h5>
+                                        <p class="card-text"> {{ formatDate(account.creationDate) }}</p>
+                                        <p class="text-center lead account-balance"> ${{ account.balance }} </p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+        
+                    <div class="row mt-3">
+                        <div class="col">
+                            <h2 class="display-6">Credits</h2>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div v-for="credit in clientInfo.loans" class="col-12 col-md-3 mt-2">
+                            <div class="card border-0 credit">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ credit.name }}</h5>
+                                    <p class="card-text"> payments: {{ credit.payments}}</p>
+                                    <p class="text-center lead account-balance"> ${{ credit.amount }} </p>
+                                </div>
                             </div>
                         </div>
                     </div>
+        
                 </div>
-
             </div>
         </div>
+
 
     </div>
 
