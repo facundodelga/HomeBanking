@@ -1,4 +1,5 @@
 ﻿using HomeBanking.Models;
+using prueba.Models;
 
 namespace HomeBanking.DTOS {
     public class LoanDTO {
@@ -9,5 +10,14 @@ namespace HomeBanking.DTOS {
 
         public ICollection<ClientLoanDTO> ClientLoans { get; set; }
 
+        public LoanDTO(Loan loan) {
+            Id = loan.Id;
+            Name = loan.Name;
+            MaxAmount = loan.MaxAmount;
+            Payments = loan.Payments;
+
+
+            ClientLoans = loan.ClientLoans.Select(cl => new ClientLoanDTO(cl)).ToList();
+        }
     }
 }
