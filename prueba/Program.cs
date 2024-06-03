@@ -10,15 +10,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<HomeBankingContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("HomeBankingConexion")
 ));
 
-//
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 //Agrego servicios de autenticacion
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -27,7 +26,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
           options.LoginPath = new PathString("/index.html");
       });
 
-//Agrego servicios de autorización
+//Agrego servicios de autorizaci?n
 builder.Services.AddAuthorization(options => {
     options.AddPolicy("ClientOnly", policy => policy.RequireClaim("Client"));
 });
@@ -37,7 +36,6 @@ builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ILoanRepository, LoanRepository>();
-builder.Services.AddScoped<ICardRepository, CardRepository>();
 
 var app = builder.Build();
 
@@ -56,11 +54,10 @@ using (var scope = app.Services.CreateScope()) {
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment()) {
     app.UseExceptionHandler("/Error");
-}
-else {
+}else {
     app.UseSwagger();
     app.UseSwaggerUI();
-    
+
 }
 
 app.UseStaticFiles();
