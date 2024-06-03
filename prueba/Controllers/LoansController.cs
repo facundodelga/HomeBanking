@@ -8,7 +8,7 @@ namespace HomeBanking.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class LoansController : ControllerBase {
-        public ILoanRepository loanRepository { get; set; }
+        private ILoanRepository loanRepository { get; set; }
 
         public LoansController(ILoanRepository loanRepository)
         {

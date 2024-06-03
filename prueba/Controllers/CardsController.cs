@@ -9,7 +9,7 @@ namespace HomeBanking.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class CardsController : ControllerBase {
-        public ICardRepository cardRepository{ get; set; }
+        private ICardRepository cardRepository{ get; set; }
 
         public CardsController(ICardRepository cardRepository) { 
             this.cardRepository = cardRepository;

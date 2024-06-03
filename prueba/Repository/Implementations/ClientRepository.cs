@@ -8,6 +8,7 @@ namespace prueba.Repository.Implementations {
 
         }
 
+
         public Client FindById(long id) {
             // Utiliza el método FindByCondition de la clase base RepositoryBase<T>
             // para obtener un IQueryable<Client> que cumpla la condición especificada
@@ -29,6 +30,14 @@ namespace prueba.Repository.Implementations {
                 .ToList();
         }
 
+        public Client FindByEmail(string email) {
+            return FindByCondition(c => c.Email.ToUpper() == email.ToUpper())
+                .Include(c => c.Accounts)
+                .Include(c => c.ClientLoans)
+                    .ThenInclude(cloan=> cloan.Loan)
+                .Include(client => client.Cards)
+                .FirstOrDefault();
+        }
         public void Save(Client client) {
             Create(client);
             SaveChanges();
