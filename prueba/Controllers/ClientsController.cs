@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HomeBanking.DTOS;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using prueba.DTOS;
 using prueba.Models;
 using prueba.Repository;
@@ -70,5 +72,37 @@ namespace prueba.Controllers {
                 return StatusCode(500, ex.Message);
             }
         }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] SignUpDTO signup) {
+            try {
+                //validamos datos antes
+                if (String.IsNullOrEmpty(signup.Email) || String.IsNullOrEmpty(signup.Password) || String.IsNullOrEmpty(signup.FirstName) || String.IsNullOrEmpty(signup.LastName))
+                    return StatusCode(403, "datos inválidos");
+
+                //buscamos si ya existe el usuario
+                Client user = _clientRepository.FindByEmail(signup.Email);
+
+                if (user != null) {
+                    return StatusCode(403, "Email está en uso");
+                }
+
+                Client newClient = new Client { 
+                    Email = signup.Email,
+                    Password = signup.Password,
+                    FirstName = signup.FirstName,
+                    LastName = signup.LastName,
+                    };
+
+                _clientRepository.Save(newClient);
+                return Created("", newClient);
+
+            }
+            catch (Exception ex) {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
     }
 }
