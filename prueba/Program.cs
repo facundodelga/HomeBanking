@@ -15,6 +15,11 @@ builder.Services.AddDbContext<HomeBankingContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("HomeBankingConexion")
 ));
 
+//
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 //Agrego servicios de autenticacion
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
       .AddCookie(options => {
@@ -52,7 +57,11 @@ using (var scope = app.Services.CreateScope()) {
 if (!app.Environment.IsDevelopment()) {
     app.UseExceptionHandler("/Error");
 }
-
+else {
+    app.UseSwagger();
+    app.UseSwaggerUI();
+    
+}
 
 app.UseStaticFiles();
 
