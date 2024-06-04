@@ -23,7 +23,7 @@ namespace HomeBanking.Controllers {
             try {
                 Client client = _clientRepository.FindByEmail(user.Email);
                 if (client == null || !String.Equals(user.Password, client.Password))
-                    return Unauthorized();
+                    return StatusCode(403, "User info not found.");
 
                 var claims = new List<Claim>();
 

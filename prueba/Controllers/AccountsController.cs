@@ -39,7 +39,7 @@ namespace HomeBanking.Controllers {
             try {
                 var account = _accountRepository.FindById(id);
                 if (account == null) {
-                    return Forbid();
+                    return StatusCode(403, "Forbidden");
                 }
                 var accountDTO = new AccountDTO(account);
                 return Ok(accountDTO);

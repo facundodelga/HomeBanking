@@ -26,7 +26,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
           options.LoginPath = new PathString("/index.html");
       });
 
-//Agrego servicios de autorizaci?n
+//Agrego servicios de autorizacion
 builder.Services.AddAuthorization(options => {
     options.AddPolicy("ClientOnly", policy => policy.RequireClaim("Client"));
     options.AddPolicy("AdminOnly", policy => policy.RequireClaim("Admin"));

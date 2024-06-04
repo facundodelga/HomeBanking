@@ -41,7 +41,7 @@ namespace prueba.Controllers {
             try {
                 var client = _clientRepository.FindById(id);
                 if (client == null) {
-                    return Forbid();
+                    return StatusCode(403, "Forbidden");
                 }
                 var clientDTO = new ClientDTO(client);
                 return Ok(clientDTO);
@@ -58,7 +58,7 @@ namespace prueba.Controllers {
             try {
                 string email = User.FindFirst("Client") != null ? User.FindFirst("Client").Value : string.Empty;
                 if (email == string.Empty) {
-                    return Forbid();
+                    return StatusCode(403,"Forbidden");
                 }
 
                 Client client = _clientRepository.FindByEmail(email);
