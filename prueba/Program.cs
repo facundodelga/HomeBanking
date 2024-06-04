@@ -29,6 +29,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 //Agrego servicios de autorizaci?n
 builder.Services.AddAuthorization(options => {
     options.AddPolicy("ClientOnly", policy => policy.RequireClaim("Client"));
+    options.AddPolicy("AdminOnly", policy => policy.RequireClaim("Admin"));
 });
 
 //Agrego repositorios para usarlos en los controladores

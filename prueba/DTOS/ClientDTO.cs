@@ -19,12 +19,18 @@ namespace prueba.DTOS {
             LastName = client.LastName;
             Email = client.Email;
 
-            Console.WriteLine(client.Accounts.ToArray());
+            //Console.WriteLine(client.Accounts.ToArray());
 
             Accounts = client.Accounts.Select(ac => new AccountClientDTO(ac)).ToList();
             Loans = client.ClientLoans.Select(cl => new ClientLoanDTO(cl)).ToList();
             Cards = client.Cards.Select(card => new CardDTO(card)).ToList();
 
+        }
+
+        public ClientDTO(SignUpDTO dto) { 
+            FirstName = dto.FirstName;
+            LastName = dto.LastName;
+            Email = dto.Email;
         }
     }
 }

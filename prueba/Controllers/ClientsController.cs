@@ -1,6 +1,6 @@
 ﻿using HomeBanking.DTOS;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using prueba.DTOS;
 using prueba.Models;
 using prueba.Repository;
@@ -17,6 +17,7 @@ namespace prueba.Controllers {
         }
 
         [HttpGet]
+        [Authorize(Policy = "AdminOnly")]
         public IActionResult Get() {
             try {
                 var clients = _clientRepository.GetAllClients();
@@ -52,6 +53,7 @@ namespace prueba.Controllers {
         }
 
         [HttpGet("current")]
+        [Authorize(Policy = "ClientOnly")]
         public IActionResult GetCurrent() {
             try {
                 string email = User.FindFirst("Client") != null ? User.FindFirst("Client").Value : string.Empty;
@@ -62,7 +64,7 @@ namespace prueba.Controllers {
                 Client client = _clientRepository.FindByEmail(email);
 
                 if (client == null) {
-                    return Forbid();
+                    return StatusCode(403,"Unauthorized");
                 }
 
                 var clientDTO = new ClientDTO(client);
@@ -95,7 +97,7 @@ namespace prueba.Controllers {
                     };
 
                 _clientRepository.Save(newClient);
-                return Created("", newClient);
+                return Created("", new ClientDTO(signup));
 
             }
             catch (Exception ex) {

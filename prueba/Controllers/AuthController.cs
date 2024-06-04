@@ -19,16 +19,18 @@ namespace HomeBanking.Controllers {
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginDTO client) {
+        public async Task<IActionResult> Login([FromBody] LoginDTO user) {
             try {
-                Client user = _clientRepository.FindByEmail(client.Email);
-                if (user == null || !String.Equals(user.Password, client.Password))
+                Client client = _clientRepository.FindByEmail(user.Email);
+                if (client == null || !String.Equals(user.Password, client.Password))
                     return Unauthorized();
 
-                var claims = new List<Claim>
-                {
-                    new Claim("Client", user.Email),
-                };
+                var claims = new List<Claim>();
+
+                if (user.Email.ToLower().Equals("facudelga3@gmail.com"))
+                    claims.Add(new Claim("Admin", client.Email));
+
+                claims.Add(new Claim("Client", client.Email));
 
                 var claimsIdentity = new ClaimsIdentity(
                     claims,
