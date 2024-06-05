@@ -1,4 +1,5 @@
 ﻿using HomeBanking.DTOS;
+using HomeBanking.Models;
 using HomeBanking.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,15 @@ namespace prueba.Controllers {
     public class ClientsController : ControllerBase {
         private IClientRepository _clientRepository;
         private IAccountRepository _accountRepository;
+        private ICardRepository _cardRepository;
 
-        public ClientsController(IClientRepository clientRepository,IAccountRepository accountRepository) {
+        public ClientsController(IClientRepository clientRepository,
+            IAccountRepository accountRepository, 
+            ICardRepository cardRepository) 
+        {
             _clientRepository = clientRepository;
             _accountRepository = accountRepository; 
+            _cardRepository = cardRepository;
         }
 
         [HttpGet]
@@ -142,7 +148,7 @@ namespace prueba.Controllers {
 
         [HttpPost("current/accounts")]
         [Authorize(Policy = "ClientOnly")]
-        public IActionResult Post() {
+        public IActionResult PostAccounts() {
             try {
                 string email = User.FindFirst("Client") != null ? User.FindFirst("Client").Value : string.Empty;
                 if (email == string.Empty) {
@@ -186,6 +192,70 @@ namespace prueba.Controllers {
                 return StatusCode(500, ex.Message);
             }
             
+        }
+
+        [HttpPost("current/cards")]
+        [Authorize(Policy = "ClientOnly")]
+        public IActionResult PostCards([FromBody] CreateCardDTO createCardDTO) {
+            try {
+                string email = User.FindFirst("Client") != null ? User.FindFirst("Client").Value : string.Empty;
+                if (email == string.Empty) {
+                    return StatusCode(403, "Forbidden");
+                }
+
+                Client client = _clientRepository.FindByEmail(email);
+                if (client == null) {
+                    return StatusCode(403, "Unauthorized");
+                }
+
+                var cards = _cardRepository.FindByClient(client.Id);
+                //busco las targetas que tengo para el tipo que viene en Body
+                var cardsType = cards.Select(card => card.Type.ToString() == createCardDTO.Type); 
+
+                if (cardsType.Count() < 3) {
+                    var random = new Random();
+                    string cardNumAux;
+                    string cardNum;
+
+                    do {
+                        long randomNumber = random.Next(10000);
+
+                        cardNumAux = randomNumber.ToString("D4");
+                        cardNum = cardNumAux;
+                        
+                        for (int i = 0; i < 3; i++) {
+                            randomNumber = random.Next(10000);
+
+                            cardNumAux = randomNumber.ToString("D4");
+                            cardNum = "-" + cardNumAux;
+                        }
+
+                    } while (_cardRepository.FindByNumber(cardNum) != null);
+
+                    int cvv = random.Next(100,1000);
+
+                    var newCard = new Card {
+                        FromDate = DateTime.Now,
+                        ThruDate = DateTime.Now.AddYears(5),
+                        ClientId = client.Id,
+                        Cvv = cvv,
+                        Number = cardNum,
+                        Color = createCardDTO.Color,
+                    };
+
+                    _accountRepository.Save(newAccount);
+
+                    return StatusCode(201, accountNum);
+                }
+                else {
+                    return StatusCode(403, "Cliente con 3 tarjetas del mismo tipo");
+                }
+
+            }
+            catch (Exception ex) {
+                return StatusCode(500, ex.Message);
+            }
+
         }
 
     }
