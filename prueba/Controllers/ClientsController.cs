@@ -274,7 +274,7 @@ namespace prueba.Controllers {
                     if(cardsByType.Count() == 3)
                         return StatusCode(403, "Cliente con 3 tarjetas del mismo tipo");
                     else
-                        return StatusCode(403, "Cliente con una tarjeta " + createCardDTO.Color + "existente");
+                        return StatusCode(403, "Cliente con una tarjeta " + createCardDTO.Color + " existente");
                 }
 
             }
