@@ -3,6 +3,7 @@ using HomeBanking.Models;
 using HomeBanking.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using prueba.DTOS;
 using prueba.Models;
 using prueba.Repository;
@@ -130,14 +131,37 @@ namespace prueba.Controllers {
                     return StatusCode(403, "Email está en uso");
                 }
 
-                Client newClient = new Client { 
+                Client newClient = new Client {
                     Email = signup.Email,
                     Password = signup.Password,
                     FirstName = signup.FirstName,
                     LastName = signup.LastName,
-                    };
-
+                };
+                //Guardo en la DB asi se genera la ID
                 _clientRepository.Save(newClient);
+                
+                //empiezo a crear la cuenta
+                Client client = _clientRepository.FindByEmail(signup.Email);
+
+                var accounts = _accountRepository.GetAccountsByClient(client.Id);
+                var random = new Random();
+                string accountNum;
+
+                do {
+                    long randomNumber = random.Next(10000000,100000000);
+                    accountNum = randomNumber.ToString("D8");
+                    accountNum = "VIN-" + accountNum;
+                } while (_accountRepository.FindByNumber(accountNum) != null);
+
+                var newAccount = new Account {
+                    CreationDate = DateTime.Now,
+                    ClientId = client.Id,
+                    Balance = 0,
+                    Number = accountNum
+                };
+
+                _accountRepository.Save(newAccount);
+
                 return Created("", new ClientDTO(signup));
 
             }
@@ -166,11 +190,10 @@ namespace prueba.Controllers {
                     string accountNum;
 
                     do {
-                        long randomNumber = random.Next(100000000);
-                        accountNum = randomNumber.ToString("D8");
+                        string randomNumber = random.Next(10000000,100000000).ToString();
+                        accountNum = "VIN-" + randomNumber;
+                    
                     } while (_accountRepository.FindByNumber(accountNum) != null);
-
-                    accountNum = "VIN-" + accountNum;
 
                     var newAccount = new Account {
                         CreationDate = DateTime.Now,
@@ -211,23 +234,17 @@ namespace prueba.Controllers {
                 var cards = _cardRepository.FindByClient(client.Id);
                 //busco las tarjetas que tengo para el tipo que viene en Body
                 var cardsByType = cards.Where(card => card.Type.ToString() == createCardDTO.Type).ToList();
-
-                if (cardsByType.Count() < 3) {
+                //busco si existe una tarjeta con color ya existente
+                bool hasCardWithColor = cards.Any(card => card.Color.ToString() == createCardDTO.Color);
+                
+                if (cardsByType.Count() < 3 && !hasCardWithColor) {
                     var random = new Random();
-                    string cardNumAux;
                     string cardNum;
 
                     do {
-                        long randomNumber = random.Next(10000);
-
-                        cardNumAux = randomNumber.ToString("D4");
-                        cardNum = cardNumAux;
-
-                        for (int i = 0; i < 3; i++) {
-                            randomNumber = random.Next(10000);
-
-                            cardNumAux = randomNumber.ToString("D4");
-                            cardNum = cardNum + "-" + cardNumAux;
+                        cardNum = random.Next(1000, 10000).ToString();
+                        for (var i = 0; i<3; i++) {
+                            cardNum =  cardNum + "-" + random.Next(1000, 10000).ToString();
                         }
                         //Console.WriteLine(cardNum);
                     } while (_cardRepository.FindByNumber(cardNum) != null);
@@ -254,7 +271,10 @@ namespace prueba.Controllers {
                     return StatusCode(201, cardNum);
                 }
                 else {
-                    return StatusCode(403, "Cliente con 3 tarjetas del mismo tipo");
+                    if(cardsByType.Count() == 3)
+                        return StatusCode(403, "Cliente con 3 tarjetas del mismo tipo");
+                    else
+                        return StatusCode(403, "Cliente con una tarjeta " + createCardDTO.Color + "existente");
                 }
 
             }
