@@ -235,7 +235,7 @@ namespace prueba.Controllers {
                 //busco las tarjetas que tengo para el tipo que viene en Body
                 var cardsByType = cards.Where(card => card.Type.ToString() == createCardDTO.Type).ToList();
                 //busco si existe una tarjeta con color ya existente
-                bool hasCardWithColor = cards.Any(card => card.Color.ToString() == createCardDTO.Color);
+                bool hasCardWithColor = cardsByType.Any(card => card.Color.ToString() == createCardDTO.Color);
                 
                 if (cardsByType.Count() < 3 && !hasCardWithColor) {
                     var random = new Random();
