@@ -210,7 +210,7 @@ namespace prueba.Controllers {
 
                 var cards = _cardRepository.FindByClient(client.Id);
                 //busco las targetas que tengo para el tipo que viene en Body
-                var cardsType = cards.Select(card => card.Type.ToString() == createCardDTO.Type); 
+                var cardsType = cards.Select(card => card.Type.ToString() == createCardDTO.Type);
 
                 if (cardsType.Count() < 3) {
                     var random = new Random();
@@ -222,30 +222,36 @@ namespace prueba.Controllers {
 
                         cardNumAux = randomNumber.ToString("D4");
                         cardNum = cardNumAux;
-                        
+
                         for (int i = 0; i < 3; i++) {
                             randomNumber = random.Next(10000);
 
                             cardNumAux = randomNumber.ToString("D4");
-                            cardNum = "-" + cardNumAux;
+                            cardNum = cardNum + "-" + cardNumAux;
                         }
-
+                        //Console.WriteLine(cardNum);
                     } while (_cardRepository.FindByNumber(cardNum) != null);
+                    //Console.WriteLine(cardNum);
+                    int cvv = random.Next(100, 1000);
 
-                    int cvv = random.Next(100,1000);
-
+                    //parseo los enum que vienen por body
+                    CardType cardType = (CardType)Enum.Parse(typeof(CardType), createCardDTO.Type);
+                    CardColor cardColor = (CardColor)Enum.Parse(typeof(CardColor), createCardDTO.Color);
+                    
                     var newCard = new Card {
+                        CardHolder = client.FirstName + " " + client.LastName,
                         FromDate = DateTime.Now,
                         ThruDate = DateTime.Now.AddYears(5),
                         ClientId = client.Id,
                         Cvv = cvv,
                         Number = cardNum,
-                        Color = createCardDTO.Color,
+                        Color = cardColor,
+                        Type = cardType,
                     };
 
-                    _accountRepository.Save(newAccount);
+                    _cardRepository.Save(newCard);
 
-                    return StatusCode(201, accountNum);
+                    return StatusCode(201, cardNum);
                 }
                 else {
                     return StatusCode(403, "Cliente con 3 tarjetas del mismo tipo");
