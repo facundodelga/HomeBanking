@@ -22,7 +22,7 @@ builder.Services.AddDbContext<HomeBankingContext>(options =>
 //Agrego servicios de autenticacion
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
       .AddCookie(options => {
-          options.ExpireTimeSpan = TimeSpan.FromMinutes(1);
+          options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
           options.LoginPath = new PathString("/index.html");
       });
 

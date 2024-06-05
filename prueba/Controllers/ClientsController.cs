@@ -209,10 +209,10 @@ namespace prueba.Controllers {
                 }
 
                 var cards = _cardRepository.FindByClient(client.Id);
-                //busco las targetas que tengo para el tipo que viene en Body
-                var cardsType = cards.Select(card => card.Type.ToString() == createCardDTO.Type);
+                //busco las tarjetas que tengo para el tipo que viene en Body
+                var cardsByType = cards.Where(card => card.Type.ToString() == createCardDTO.Type).ToList();
 
-                if (cardsType.Count() < 3) {
+                if (cardsByType.Count() < 3) {
                     var random = new Random();
                     string cardNumAux;
                     string cardNum;
