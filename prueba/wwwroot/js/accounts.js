@@ -13,7 +13,6 @@ var app = new Vue({
             .then(function (response) {
                 //get client ifo
                 app.clientInfo = response.data;
-                console.log(response)
             })
             .catch(function (error) {
                 // handle error
@@ -33,6 +32,14 @@ var app = new Vue({
                     this.errorToats.show();
                 })
         },
+        create: function(){
+            axios.post('/api/clients/current/accounts')
+            .then(response => window.location.reload())
+            .catch((error) =>{
+                this.errorMsg = error.response.data;  
+                this.errorToats.show();
+            })
+        }        
     },
     mounted: function () {
         this.errorToats = new bootstrap.Toast(document.getElementById('danger-toast'));

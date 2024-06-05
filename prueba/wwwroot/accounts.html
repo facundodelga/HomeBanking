@@ -25,8 +25,7 @@
                 <div class="col-12 col-md-2">
                     <div class="bg-light">
                         <a href="/accounts.html"
-                            class="d-flex flex-column
-                            align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                            class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
                             <img class="menu-logo" src="img/logo vinotinto.png">
                             <span class="fs-5">Banco Vinotinto</span>
                         </a>
@@ -61,6 +60,7 @@
                     <div class="row mt-3">
                         <div class="col">
                             <h2 class="display-6">Accounts</h2>
+                            <button v-if="clientInfo.accounts != null && clientInfo.accounts.length < 3" v-on:click="create" id="create" class="btn btn-sm btn-outline-success">Create</button>
                         </div>
                     </div>
                     <div class="row">
@@ -79,7 +79,7 @@
         
                     <div class="row mt-3">
                         <div class="col">
-                            <h2 class="display-6">Credits</h2>
+                            <h2 class="display-6">Loans</h2>
                         </div>
                     </div>
                     <div class="row">

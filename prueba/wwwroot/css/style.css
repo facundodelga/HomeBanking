@@ -22,6 +22,14 @@
     text-decoration: none;
 }
 
+.subtitle {
+    display: inline;
+}
+
+#create{
+    margin-bottom: 15px;
+}
+
 .credit-transaction{
     color: green;
 }

@@ -28,7 +28,7 @@
                 <div class="col-12 col-md-2">
                     <div class="bg-light">
                         <a href="/accounts.html"
-                            class="d-flex flex-column align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+                            class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
                             <img class="menu-logo" src="img/logo vinotinto.png">
                             <span class="fs-5">Banco Vinotinto</span>
                         </a>
@@ -59,9 +59,11 @@
                             <h1 class="display-1">{{ clientInfo.firstName }} {{ clientInfo.lastName }}</h1>
                         </div>
                     </div>
+                    <a v-if="clientInfo.cards != null && clientInfo.cards.length < 6" href="create-cards.html" id="create" class="btn btn-sm btn-outline-success">Create</a>
                     <div class="row mt-3">
                         <div class="col">
                             <h2 class="display-6">Debit Cards</h2>
+                            
                             <span class="small" v-if="debitCards.length <= 0">No debit cards</span>
                         </div>
                     </div>

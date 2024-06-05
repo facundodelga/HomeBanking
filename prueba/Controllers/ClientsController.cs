@@ -1,4 +1,5 @@
 ﻿using HomeBanking.DTOS;
+using HomeBanking.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using prueba.DTOS;
@@ -11,9 +12,11 @@ namespace prueba.Controllers {
     [ApiController]
     public class ClientsController : ControllerBase {
         private IClientRepository _clientRepository;
+        private IAccountRepository _accountRepository;
 
-        public ClientsController(IClientRepository clientRepository) {
+        public ClientsController(IClientRepository clientRepository,IAccountRepository accountRepository) {
             _clientRepository = clientRepository;
+            _accountRepository = accountRepository; 
         }
 
         [HttpGet]
@@ -76,6 +79,37 @@ namespace prueba.Controllers {
             }
         }
 
+        [HttpGet("current/accounts")]
+        [Authorize(Policy = "ClientOnly")]
+        public IActionResult GetCurrentAccounts() {
+            try {
+                string email = User.FindFirst("Client") != null ? User.FindFirst("Client").Value : string.Empty;
+                if (email == string.Empty) {
+                    return StatusCode(403, "Forbidden");
+                }
+
+                Client client = _clientRepository.FindByEmail(email);
+
+                if (client == null) {
+                    return StatusCode(403, "Unauthorized");
+                }
+
+                var accounts = _accountRepository.GetAccountsByClient(client.Id);
+
+                var accountsDTO = new List<AccountDTO>();
+                foreach (var account in accounts) { 
+                    var accountDTO = new AccountDTO(account);
+                    accountsDTO.Add(accountDTO);
+                }
+
+                return Ok(accountsDTO);
+            }
+            catch (Exception ex) {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+
         [HttpPost]
         public IActionResult Post([FromBody] SignUpDTO signup) {
             try {
@@ -106,6 +140,53 @@ namespace prueba.Controllers {
             }
         }
 
+        [HttpPost("current/accounts")]
+        [Authorize(Policy = "ClientOnly")]
+        public IActionResult Post() {
+            try {
+                string email = User.FindFirst("Client") != null ? User.FindFirst("Client").Value : string.Empty;
+                if (email == string.Empty) {
+                    return StatusCode(403, "Forbidden");
+                }
+
+                Client client = _clientRepository.FindByEmail(email);
+                if (client == null) {
+                    return StatusCode(403, "Unauthorized");
+                }
+
+                var accounts = _accountRepository.GetAccountsByClient(client.Id);
+                if (accounts.Count() < 3) {
+                    var random = new Random();
+                    string accountNum;
+
+                    do {
+                        long randomNumber = random.Next(100000000);
+                        accountNum = randomNumber.ToString("D8");
+                    } while (_accountRepository.FindByNumber(accountNum) != null);
+
+                    accountNum = "VIN-" + accountNum;
+
+                    var newAccount = new Account {
+                        CreationDate = DateTime.Now,
+                        ClientId = client.Id,
+                        Balance = 0,
+                        Number = accountNum
+                    };
+
+                    _accountRepository.Save(newAccount);
+
+                    return StatusCode(201, accountNum);
+                }
+                else {
+                    return StatusCode(403, "Cliente con 3 cuentas");
+                }
+
+            }
+            catch (Exception ex) {
+                return StatusCode(500, ex.Message);
+            }
+            
+        }
 
     }
 }
