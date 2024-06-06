@@ -1,5 +1,6 @@
 using HomeBanking.Repository;
 using HomeBanking.Repository.Implementations;
+using HomeBanking.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using prueba.Models;
@@ -38,6 +39,8 @@ builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
 builder.Services.AddScoped<ILoanRepository, LoanRepository>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
+
+
 
 var app = builder.Build();
 
