@@ -5,6 +5,7 @@ using HomeBanking.Repository;
 using HomeBanking.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using prueba.DTOS;
 using prueba.Models;
@@ -89,7 +90,7 @@ namespace prueba.Controllers {
         public IActionResult GetCurrentAccounts() {
             try {
                 string email = User.FindFirst("Client") != null ? User.FindFirst("Client").Value : string.Empty;
-                if (email == string.Empty) {
+                if (email.IsNullOrEmpty()) {
                     return StatusCode(403, "Forbidden");
                 }
 
@@ -151,7 +152,7 @@ namespace prueba.Controllers {
                     return StatusCode(403, "Unauthorized");
                 }
 
-                var accountdto = new AccountDTO(_accountService.CreateAccount(client.Id));
+                var accountdto = new AccountClientDTO(_accountService.CreateAccount(client.Id));
                 
                 return StatusCode(201, accountdto);
             }

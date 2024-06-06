@@ -55,7 +55,7 @@ namespace HomeBanking.Services.Implementations
 
                 } while (FindByNumber(accountNum) != null);
 
-                var newAccount = new Account
+                Account newAccount = new Account
                 {
                     CreationDate = DateTime.Now,
                     ClientId = clientId,
