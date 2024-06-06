@@ -1,15 +1,11 @@
 ﻿using HomeBanking.DTOS;
 using HomeBanking.Exceptions;
-using HomeBanking.Models;
-using HomeBanking.Repository;
 using HomeBanking.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using prueba.DTOS;
 using prueba.Models;
-using prueba.Repository;
 
 namespace prueba.Controllers {
 
