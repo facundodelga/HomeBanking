@@ -31,7 +31,7 @@ namespace HomeBanking.Services.Implementations {
         public void Save(Card card) {
             _cardRepository.Save(card);
         }
-        public Card CreateCard(long clientId, string cardHolder, CreateCardDTO createCardDTO) {
+        public (Card card,int status) CreateCard(long clientId, string cardHolder, CreateCardDTO createCardDTO) {
 
             var cards = _cardRepository.FindByClient(clientId);
             //busco las tarjetas que tengo para el tipo que viene en Body
@@ -70,14 +70,10 @@ namespace HomeBanking.Services.Implementations {
 
                 _cardRepository.Save(newCard);
 
-                return newCard;
+                return (newCard,201);
             }
             else {
-                if (cardsByType.Count() == 3)
-
-                    throw new CardException("Cliente con 3 tarjetas del mismo tipo");
-                else
-                    throw new CardException("Cliente con una tarjeta " + createCardDTO.Color + " existente");
+                return (null, 403);
             }
         }
     }

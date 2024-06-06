@@ -28,16 +28,16 @@ namespace HomeBanking.Services.Implementations {
             return new ClientDTO(client);
         }
 
-        public Client CreateClient(SignUpDTO signup) {
-            
+        public (Client client, int status) CreateClient(SignUpDTO signup) {
+
             if (String.IsNullOrEmpty(signup.Email) || String.IsNullOrEmpty(signup.Password) || String.IsNullOrEmpty(signup.FirstName) || String.IsNullOrEmpty(signup.LastName))
-                throw new InvalidDataException("Datos invalidos");
+                return (null,403);
             
             //buscamos si ya existe el usuario
             Client user = _clientRepository.FindByEmail(signup.Email);
 
             if (user != null) {
-                throw new ClientExistException("El cliente ya existe");
+                return (null,403);
             }
 
             Client newClient = new Client {
@@ -49,7 +49,7 @@ namespace HomeBanking.Services.Implementations {
             //Guardo en la DB asi se genera la ID
             _clientRepository.Save(newClient);
 
-            return newClient;
+            return (newClient,201); 
         }
 
         public Client FindByEmail(string email) {

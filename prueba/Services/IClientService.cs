@@ -10,7 +10,7 @@ namespace HomeBanking.Services {
         Client FindById(long id);
         Client FindByEmail(string email);
 
-        Client CreateClient(SignUpDTO signup);
+        (Client client,int status) CreateClient(SignUpDTO signup);
 
         List<ClientDTO> ClientsToDTOs(IEnumerable<Client> clients);
         ClientDTO ClientToDTO(Client client);

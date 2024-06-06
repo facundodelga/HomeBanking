@@ -9,7 +9,7 @@ namespace HomeBanking.Services {
         Account FindById(long id);
         IEnumerable<Account> GetAccountsByClient(long clientId);
         Account FindByNumber(string num);
-        Account CreateAccount(long clientId);
+        (Account account, int status) CreateAccount(long clientId);
         
     }
 }

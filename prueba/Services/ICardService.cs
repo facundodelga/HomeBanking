@@ -8,6 +8,6 @@ namespace HomeBanking.Services {
         Card FindById(long id);
         IEnumerable<Card> FindByClient(long clientId);
         Card FindByNumber(string number);
-        Card CreateCard(long clientId, string cardHolder, CreateCardDTO createCardDTO);
+        (Card card,int status) CreateCard(long clientId, string cardHolder, CreateCardDTO createCardDTO);
     }
 }

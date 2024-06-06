@@ -120,18 +120,15 @@ namespace prueba.Controllers {
         public IActionResult Post([FromBody] SignUpDTO signup) {
             try {
                 
-                Client client = _clientService.CreateClient(signup);
-
-                Account account = _accountService.CreateAccount(client.Id);
+                var clientResponse = _clientService.CreateClient(signup);
+                
+                if (clientResponse.client == null) { 
+                    return StatusCode(clientResponse.status,"Error al crear cliente");
+                }
+                var accountResponse = _accountService.CreateAccount(clientResponse.client.Id);
 
                 return Created("", new ClientDTO(signup));
 
-            }
-            catch (ClientExistException e){
-                return StatusCode(403, e.Message); 
-            }
-            catch (InvalidDataException e) {
-                return StatusCode(403, e.Message);
             }
             catch (Exception ex) {
                 return StatusCode(500, ex.Message);
@@ -152,12 +149,14 @@ namespace prueba.Controllers {
                     return StatusCode(403, "Unauthorized");
                 }
 
-                var accountdto = new AccountClientDTO(_accountService.CreateAccount(client.Id));
+                var accountResponse = _accountService.CreateAccount(client.Id);
+                if(accountResponse.account == null) {
+                    return StatusCode(accountResponse.status, "Cliente con 3 cuentas");
+                }
+
+                var accountdto = new AccountClientDTO(accountResponse.account);
                 
                 return StatusCode(201, accountdto);
-            }
-            catch (ThreeAccountsException ex) {
-                return StatusCode(403, ex.Message);
             }
             catch (Exception ex) {
                 return StatusCode(500, ex.Message);
@@ -179,9 +178,13 @@ namespace prueba.Controllers {
                     return StatusCode(403, "Unauthorized");
                 }
 
-                Card card = _cardService.CreateCard(client.Id,client.FirstName +" "+ client.LastName,createCardDTO);
+                var cardResponse = _cardService.CreateCard(client.Id,client.FirstName +" "+ client.LastName,createCardDTO);
+                if (cardResponse.card == null) {
+                    return StatusCode(cardResponse.status, "Error al crear la Tarjeta");
+                }
 
-                return Created("",new CardDTO(card));
+
+                return Created("",new CardDTO(cardResponse.card));
             }
             catch (CardException ex) {
                 return StatusCode(403, ex.Message);
