@@ -1,26 +1,24 @@
 ﻿using HomeBanking.DTOS;
 using HomeBanking.Models;
-using HomeBanking.Repository;
 using HomeBanking.Services;
 using HomeBanking.Services.Implementations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using prueba.DTOS;
 using prueba.Models;
-using prueba.Repository;
+
 
 namespace HomeBanking.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class TransactionsController : ControllerBase {
-        private ITransactionRepository _transactionRepository;
+        private ITransactionService _transactionService;
         private IAccountService _accountService;
         private IClientService _clientService;
 
-        public TransactionsController(ITransactionRepository transactionRepository, IAccountService accountService, 
+        public TransactionsController(ITransactionService transactionService, IAccountService accountService, 
             IClientService clientService) {
-            _transactionRepository = transactionRepository;
+            _transactionService = transactionService;
             _accountService = accountService; 
             _clientService = clientService;
         }
@@ -29,7 +27,7 @@ namespace HomeBanking.Controllers {
         [Authorize(Policy = "AdminOnly")]
         public IActionResult Get() {
             try {
-                var transactions = _transactionRepository.GetAllTransactions();
+                var transactions = _transactionService.GetAllTransactions();
                 var transactionsDTO = new List<TransactionDTO>();
 
                 foreach (Transaction transaction in transactions) {
@@ -49,7 +47,7 @@ namespace HomeBanking.Controllers {
         [Authorize(Policy = "AdminOnly")]
         public IActionResult Get(long id) {
             try {
-                var transaction = _transactionRepository.FindById(id);
+                var transaction = _transactionService.FindById(id);
                 if (transaction == null) {
                     return Forbid();
                 }
@@ -64,14 +62,14 @@ namespace HomeBanking.Controllers {
 
         [HttpPost]
         [Authorize(Policy = "ClientOnly")]
-        public IActionResult PostTransaction([FromBody] TransferDTO transaction) {
+        public IActionResult PostTransaction([FromBody] TransferDTO transfer) {
             try {
                 string email = User.FindFirst("Client") != null ? User.FindFirst("Client").Value : string.Empty;
                 if (email == string.Empty) {
                     return StatusCode(403, "Forbidden");
                 }
 
-                Account fromAccount = _accountService.FindByNumber(transaction.FromAccountNumber);
+                Account fromAccount = _accountService.FindByNumber(transfer.FromAccountNumber);
                 if (fromAccount == null) {
                     return StatusCode(403, "From account not valid");
                 }
@@ -82,41 +80,19 @@ namespace HomeBanking.Controllers {
                     return StatusCode(403, "From account is not yours");
                 }
 
-                Account toAccount = _accountService.FindByNumber(transaction.ToAccountNumber);
+                Account toAccount = _accountService.FindByNumber(transfer.ToAccountNumber);
                 if (toAccount == null) {
                     return StatusCode(403, "To account not valid");
                 }
-                //si el monto es menor a 0 y si la cuenta no tiene los fondos
-                if (transaction.Amount < 0 || fromAccount.Balance - transaction.Amount < 0) {
-                    return StatusCode(403, "Amount not valid");
+                
+                var transactionReponse = _transactionService.MakeTransaction(fromAccount, toAccount,transfer);
+                if (transactionReponse.response == null) {
+                    return StatusCode(403, "Not enough founds");
                 }
 
-                fromAccount.Balance -= transaction.Amount;
-                toAccount.Balance += transaction.Amount;
+                var transactionDTO = new TransactionDTO(transactionReponse.response);
 
-                var newDebitT = new Transaction {
-                    Amount = transaction.Amount,
-                    Type = TransactionType.DEBIT,
-                    AccountId = fromAccount.Id,
-                    Description = transaction.Description,
-                    Date = DateTime.Now,
-                };
-
-                var newCreditT = new Transaction {
-                    Amount = transaction.Amount,
-                    Type = TransactionType.CREDIT,
-                    AccountId = toAccount.Id,
-                    Description = transaction.Description,
-                    Date = DateTime.Now,
-                };
-
-                _transactionRepository.Save(newCreditT);
-                _transactionRepository.Save(newDebitT);
-
-                _accountService.Save(fromAccount);
-                _accountService.Save(toAccount);
-
-                return StatusCode(201, "Transaccion realizada con exito");
+                return StatusCode(transactionReponse.status, transactionDTO);
             }
             catch (Exception ex) {
                 return StatusCode(500, ex.Message);
