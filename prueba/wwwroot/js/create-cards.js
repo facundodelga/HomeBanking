@@ -24,8 +24,6 @@ var app = new Vue({
                 this.errorMsg = "You must select a card type and color";  
                 this.errorToats.show();
             }else{
-                console.log(this.cardColor)
-                console.log(this.cardType)
 /*                 let config = {
                     headers: {
                         'content-type': 'application/x-www-form-urlencoded'
@@ -39,12 +37,11 @@ var app = new Vue({
                 }) */
                 axios.post('/api/clients/current/cards',{
                     type: this.cardType,
-                    color: this.cardColor
+                    color: this.cardColor,
                 })
                     .then(() => { window.location.href = "/cards.html" })
-                    .catch(error => {
-                        console.log(error)
-                        this.errorMsg = error.response.data
+                    .catch(() => {
+                        this.errorMsg = "Sign up failed, check the information"
                         this.errorToats.show();
                     })
             }

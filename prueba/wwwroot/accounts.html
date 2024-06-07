@@ -43,6 +43,12 @@
                                     Cards
                                 </a>
                             </li>
+                            <li>
+                                <a href="/transfers.html" class="nav-link link-dark">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    Transfers
+                                </a>
+                            </li>
                         </ul>
                         <hr>
                         <ul class="nav nav-pills flex-column mb-auto">
@@ -65,7 +71,7 @@
                     </div>
                     <div class="row">
                         <div v-for="account in clientInfo.accounts" class="col-12 col-md-3 mt-2">
-                            <a class="account-link" v-bind:href="'/account.html?id='+account.id">
+                            <a class="account-link" v-bind:href="'./account.html?id='+account.id">
                                 <div class="card border-0 account">
                                     <div class="card-body">
                                         <h5 class="card-title">{{ account.number }}</h5>
@@ -79,7 +85,7 @@
         
                     <div class="row mt-3">
                         <div class="col">
-                            <h2 class="display-6">Loans</h2>
+                            <h2 class="display-6">Credits</h2>
                         </div>
                     </div>
                     <div class="row">
