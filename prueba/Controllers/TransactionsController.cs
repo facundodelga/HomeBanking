@@ -16,13 +16,17 @@ namespace HomeBanking.Controllers {
     public class TransactionsController : ControllerBase {
         private ITransactionRepository _transactionRepository;
         private IAccountService _accountService;
+        private IClientService _clientService;
 
-        public TransactionsController(ITransactionRepository transactionRepository, IAccountService accountService) {
+        public TransactionsController(ITransactionRepository transactionRepository, IAccountService accountService, 
+            IClientService clientService) {
             _transactionRepository = transactionRepository;
             _accountService = accountService; 
+            _clientService = clientService;
         }
 
         [HttpGet]
+        [Authorize(Policy = "AdminOnly")]
         public IActionResult Get() {
             try {
                 var transactions = _transactionRepository.GetAllTransactions();
@@ -42,6 +46,7 @@ namespace HomeBanking.Controllers {
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "AdminOnly")]
         public IActionResult Get(long id) {
             try {
                 var transaction = _transactionRepository.FindById(id);
@@ -67,8 +72,14 @@ namespace HomeBanking.Controllers {
                 }
 
                 Account fromAccount = _accountService.FindByNumber(transaction.FromAccountNumber);
-                if (fromAccount == null || fromAccount.Client.Email != email) {
+                if (fromAccount == null) {
                     return StatusCode(403, "From account not valid");
+                }
+
+                //Voy a validar que la cuenta pertenezca al que hace la transferencia
+                Client client = _clientService.FindById(fromAccount.ClientId);
+                if (client == null || client.Email != email) {
+                    return StatusCode(403, "From account is not yours");
                 }
 
                 Account toAccount = _accountService.FindByNumber(transaction.ToAccountNumber);
@@ -76,7 +87,7 @@ namespace HomeBanking.Controllers {
                     return StatusCode(403, "To account not valid");
                 }
                 //si el monto es menor a 0 y si la cuenta no tiene los fondos
-                if (transaction.Amount < 0 && fromAccount.Balance - transaction.Amount < 0) {
+                if (transaction.Amount < 0 || fromAccount.Balance - transaction.Amount < 0) {
                     return StatusCode(403, "Amount not valid");
                 }
 
