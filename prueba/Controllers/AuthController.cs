@@ -3,27 +3,27 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using prueba.Models;
-using prueba.Repository;
 using System.Security.Claims;
 using HomeBanking.DTOS;
+using HomeBanking.Services;
 
 namespace HomeBanking.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class AuthController : ControllerBase {
-        private IClientRepository _clientRepository;
+        private IClientService _clientService;
 
-        public AuthController(IClientRepository clientRepository)
+        public AuthController(IClientService clientService)
         {
-            _clientRepository = clientRepository;
+            _clientService = clientService;
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO user) {
             try {
-                Client client = _clientRepository.FindByEmail(user.Email);
+                Client client = _clientService.FindByEmail(user.Email);
                 if (client == null || !String.Equals(user.Password, client.Password))
-                    return StatusCode(403, "User info not found.");
+                    return StatusCode(401, "User info not found.");
 
                 var claims = new List<Claim>();
 

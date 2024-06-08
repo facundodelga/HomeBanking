@@ -9,7 +9,8 @@ namespace HomeBanking.Services
         IEnumerable<Transaction> GetAllTransactions();
         void Save(Transaction transaction);
         Transaction FindById(long id);
-
-        (Transaction response, int status) MakeTransaction(Account fromAccount, Account toAccount, TransferDTO transfer);
+        TransactionDTO TransactionToDTO(Transaction t);
+        List<TransactionDTO> transactionsToDTOs(IEnumerable<Transaction> transactions);
+        (Transaction response, int status) MakeTransaction(string email, TransferDTO transfer);
     }
 }

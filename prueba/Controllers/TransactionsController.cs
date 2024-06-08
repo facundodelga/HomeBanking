@@ -28,14 +28,7 @@ namespace HomeBanking.Controllers {
         public IActionResult Get() {
             try {
                 var transactions = _transactionService.GetAllTransactions();
-                var transactionsDTO = new List<TransactionDTO>();
-
-                foreach (Transaction transaction in transactions) {
-
-                    var transactionDTO = new TransactionDTO(transaction);
-
-                    transactionsDTO.Add(transactionDTO);
-                }
+                var transactionsDTO = _transactionService.transactionsToDTOs(transactions);
                 return Ok(transactionsDTO);
             }
             catch (Exception ex) {
@@ -51,7 +44,7 @@ namespace HomeBanking.Controllers {
                 if (transaction == null) {
                     return Forbid();
                 }
-                var transactionDTO = new TransactionDTO(transaction);
+                var transactionDTO = _transactionService.TransactionToDTO(transaction);
                 return Ok(transactionDTO);
             }
             catch (Exception ex) {
@@ -69,25 +62,10 @@ namespace HomeBanking.Controllers {
                     return StatusCode(403, "Forbidden");
                 }
 
-                Account fromAccount = _accountService.FindByNumber(transfer.FromAccountNumber);
-                if (fromAccount == null) {
-                    return StatusCode(403, "From account not valid");
-                }
-
-                //Voy a validar que la cuenta pertenezca al que hace la transferencia
-                Client client = _clientService.FindById(fromAccount.ClientId);
-                if (client == null || client.Email != email) {
-                    return StatusCode(403, "From account is not yours");
-                }
-
-                Account toAccount = _accountService.FindByNumber(transfer.ToAccountNumber);
-                if (toAccount == null) {
-                    return StatusCode(403, "To account not valid");
-                }
-                
-                var transactionReponse = _transactionService.MakeTransaction(fromAccount, toAccount,transfer);
+                //MakeTransaction va a devolver la transaccion de Debito y el status 
+                var transactionReponse = _transactionService.MakeTransaction(email,transfer);
                 if (transactionReponse.response == null) {
-                    return StatusCode(403, "Not enough founds");
+                    return StatusCode(403, "Not valid data");
                 }
 
                 var transactionDTO = new TransactionDTO(transactionReponse.response);

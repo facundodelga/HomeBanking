@@ -1,6 +1,7 @@
 ﻿using HomeBanking.DTOS;
 using HomeBanking.Models;
 using HomeBanking.Repository;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using prueba.Models;
 using prueba.Repository;
 
@@ -9,10 +10,13 @@ namespace HomeBanking.Services.Implementations {
 
         private readonly ITransactionRepository _transactionRepository;
         private readonly IAccountRepository _accountRepository;
+        private readonly IClientRepository _clientRepository;
 
-        public TransactionService(ITransactionRepository transactionRepository, IAccountRepository accountRepository) {
+        public TransactionService(ITransactionRepository transactionRepository, IAccountRepository accountRepository,
+            IClientRepository clientRepository) {
             _transactionRepository = transactionRepository;
             _accountRepository = accountRepository;
+            _clientRepository = clientRepository;
         }
 
         public Transaction FindById(long id) {
@@ -23,7 +27,23 @@ namespace HomeBanking.Services.Implementations {
             return _transactionRepository.GetAllTransactions();
         }
 
-        public (Transaction response, int status) MakeTransaction(Account fromAccount, Account toAccount, TransferDTO transfer) {
+        public (Transaction response, int status) MakeTransaction(string email,TransferDTO transfer) {
+            Account fromAccount = _accountRepository.FindByNumber(transfer.FromAccountNumber);
+            if (fromAccount == null) {
+                return (null, 403);
+            }
+
+            //Voy a validar que la cuenta pertenezca al que hace la transferencia
+            Client client = _clientRepository.FindById(fromAccount.ClientId);
+            if (client == null || client.Email != email) {
+                return (null, 403);
+            }
+
+            Account toAccount = _accountRepository.FindByNumber(transfer.ToAccountNumber);
+            if (toAccount == null) {
+                return (null, 403);
+            }
+
             //si el monto es menor a 0 o si la cuenta no tiene los fondos
             if (transfer.Amount < 0 || fromAccount.Balance - transfer.Amount < 0) {
                 return (null,403);
@@ -54,13 +74,27 @@ namespace HomeBanking.Services.Implementations {
             _accountRepository.Save(fromAccount);
             _accountRepository.Save(toAccount);
 
-            
-
             return (newDebitT, 201);
         }
 
         public void Save(Transaction transaction) {
             _transactionRepository.Save(transaction);
+        }
+
+        public List<TransactionDTO> transactionsToDTOs(IEnumerable<Transaction> transactions) {
+            var transactionsDTO = new List<TransactionDTO>();
+
+            foreach (Transaction transaction in transactions) {
+
+                var transactionDTO = new TransactionDTO(transaction);
+
+                transactionsDTO.Add(transactionDTO);
+            }
+            return transactionsDTO;
+        }
+
+        public TransactionDTO TransactionToDTO(Transaction t) {
+            return new TransactionDTO(t);
         }
     }
 }

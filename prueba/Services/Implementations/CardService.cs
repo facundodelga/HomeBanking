@@ -76,5 +76,20 @@ namespace HomeBanking.Services.Implementations {
                 return (null, 403);
             }
         }
+
+        public CardDTO CardToDTO(Card card) {
+            return new CardDTO(card);
+        }
+
+        public List<CardDTO> CardsToDTOs(IEnumerable<Card> cards) {
+            var cardsdto = new List<CardDTO>();
+
+            foreach (var card in cards) {
+                var carddto = new CardDTO(card);
+
+                cardsdto.Add(carddto);
+            }
+            return cardsdto;
+        }
     }
 }
