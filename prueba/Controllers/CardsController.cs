@@ -21,7 +21,7 @@ namespace HomeBanking.Controllers {
             try {
                 var cards = cardService.GetAllCards();
 
-                
+                var cardsdto = cardService.CardsToDTOs(cards);
                 return Ok(cardsdto);
             }
             catch (Exception ex) {
