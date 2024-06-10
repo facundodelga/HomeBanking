@@ -75,6 +75,10 @@ namespace HomeBanking.Services.Implementations
 
             _clientLoanRepository.save(clientLoan);
 
+            account.Balance += loanDTO.Amount;
+
+            _accountRepository.Save(account);
+
             return new ServiceResponse<ClientLoan>(clientLoan, 201, "Prestamo creado con exito");
         }
 

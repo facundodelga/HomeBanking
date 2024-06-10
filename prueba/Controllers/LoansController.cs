@@ -66,12 +66,12 @@ namespace HomeBanking.Controllers {
                 if (email == string.Empty) {
                     return StatusCode(403, "Forbidden");
                 }
-                
-                var loanResponse = _clientLoansService.MakeLoan(loanDTO,email);
+
+                var loanResponse = _clientLoansService.MakeLoan(loanDTO, email);
                 if (loanResponse.objectResponse == null)
                     return StatusCode(loanResponse.status, loanResponse.message);
 
-                var clDTO = new ClientLoanDTO(loanResponse.objectResponse);
+                var clDTO = new ClientLoanDTO(loanResponse.objectResponse, _loanService.FindById(loanDTO.LoanId).Name);
 
                 return StatusCode(loanResponse.status,clDTO);
             }
