@@ -118,12 +118,12 @@ namespace prueba.Controllers {
                 
                 var clientResponse = _clientService.CreateClient(signup);
                 
-                if (clientResponse.client == null) { 
-                    return StatusCode(clientResponse.status,"Error al crear cliente");
+                if (clientResponse.objectResponse == null) { 
+                    return StatusCode(clientResponse.status,clientResponse.message);
                 }
-                var accountResponse = _accountService.CreateAccount(clientResponse.client.Id);
+                var accountResponse = _accountService.CreateAccount(clientResponse.objectResponse.Id);
 
-                return Created("", new ClientDTO(signup));
+                return StatusCode(clientResponse.status,new ClientDTO(clientResponse.objectResponse));
 
             }
             catch (Exception ex) {
@@ -146,13 +146,13 @@ namespace prueba.Controllers {
                 }
 
                 var accountResponse = _accountService.CreateAccount(client.Id);
-                if(accountResponse.account == null) {
-                    return StatusCode(accountResponse.status, "Cliente con 3 cuentas");
+                if(accountResponse.objectResponse == null) {
+                    return StatusCode(accountResponse.status, accountResponse.message);
                 }
 
-                var accountdto = new AccountClientDTO(accountResponse.account);
+                var accountdto = new AccountClientDTO(accountResponse.objectResponse);
                 
-                return StatusCode(201, accountdto);
+                return StatusCode(accountResponse.status, accountdto);
             }
             catch (Exception ex) {
                 return StatusCode(500, ex.Message);
@@ -175,12 +175,12 @@ namespace prueba.Controllers {
                 }
 
                 var cardResponse = _cardService.CreateCard(client.Id,client.FirstName +" "+ client.LastName,createCardDTO);
-                if (cardResponse.card == null) {
-                    return StatusCode(cardResponse.status, "Error al crear la Tarjeta");
+                if (cardResponse.objectResponse == null) {
+                    return StatusCode(cardResponse.status, cardResponse.message);
                 }
 
 
-                return Created("",new CardDTO(cardResponse.card));
+                return Created("",new CardDTO(cardResponse.objectResponse));
             }
             catch (CardException ex) {
                 return StatusCode(403, ex.Message);

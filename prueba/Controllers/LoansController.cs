@@ -23,7 +23,7 @@ namespace HomeBanking.Controllers {
         
         public IActionResult Get() {
             try {
-                var loans = loanRepository.GetAllLoans();
+                var loans = loanService.GetAllLoans();
 
                 var loansDTO = new List<LoanDTO>();
 
@@ -67,10 +67,10 @@ namespace HomeBanking.Controllers {
                 }
                 
                 var loanResponse = _loanService.MakeLoan(loanDTO,email);
-                if (loanResponse.cl == null)
-                    return StatusCode(loanResponse.status, "Data not valid");
+                if (loanResponse.objectResponse == null)
+                    return StatusCode(loanResponse.status, loanResponse.message);
 
-                var clDTO = new ClientLoanDTO(loanResponse.cl);
+                var clDTO = new ClientLoanDTO(loanResponse.objectResponse);
 
                 return StatusCode(loanResponse.status,clDTO);
             }
