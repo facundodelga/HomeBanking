@@ -7,6 +7,9 @@ using System.Security.Claims;
 using HomeBanking.DTOS;
 using HomeBanking.Services;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace HomeBanking.Controllers {
     [Route("api/[controller]")]
@@ -23,6 +26,8 @@ namespace HomeBanking.Controllers {
         public async Task<IActionResult> Login([FromBody] LoginDTO user) {
             
             try {
+                var key = "9Ks3bnBGx8fGJdN7VFnTY8jCDYmq/fR/4V5yVWGzs7Y=";
+
                 if (user.Email.IsNullOrEmpty() || user.Password.IsNullOrEmpty()) { 
                     return StatusCode(403, "Null or empty fields");
                 }
@@ -34,7 +39,7 @@ namespace HomeBanking.Controllers {
                 string passwordHash = _clientService.PasswordHash(user.Password);
 
                 //comparo los hash de las contraseñas
-                if(string.Equals(passwordHash,client.Password))
+                if(!string.Equals(passwordHash,client.Password))
                     return StatusCode(401, "We couldn't validate your email or password");
 
                 var claims = new List<Claim>();
@@ -44,16 +49,31 @@ namespace HomeBanking.Controllers {
 
                 claims.Add(new Claim("Client", client.Email));
 
-                var claimsIdentity = new ClaimsIdentity(
-                    claims,
-                    CookieAuthenticationDefaults.AuthenticationScheme
-                    );
+                //var claimsIdentity = new ClaimsIdentity(
+                //    claims,
+                //    CookieAuthenticationDefaults.AuthenticationScheme
+                //    );
 
-                await HttpContext.SignInAsync(
-                    CookieAuthenticationDefaults.AuthenticationScheme,
-                    new ClaimsPrincipal(claimsIdentity));
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var byteKey = Encoding.UTF8.GetBytes(key);
 
-                return Ok();
+                var claimsIdentity = new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme);
+
+                var tokenDescriptor = new SecurityTokenDescriptor() {
+                    Subject = claimsIdentity,
+                    Expires = DateTime.UtcNow.AddMinutes(5),
+                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(byteKey),SecurityAlgorithms.HmacSha256Signature),
+                    Issuer = "HB-MH",
+                    Audience = "Localhost"
+                };
+
+                var token = tokenHandler.CreateToken(tokenDescriptor);
+
+                //await HttpContext.SignInAsync(
+                //    JwtBearerDefaults.AuthenticationScheme,
+                //    new ClaimsPrincipal(claimsIdentity));
+
+                return Ok(new JwtSecurityTokenHandler().WriteToken(token));
 
             }
             catch (Exception ex) {

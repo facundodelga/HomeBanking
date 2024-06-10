@@ -54,7 +54,7 @@ namespace HomeBanking.Services.Implementations {
             //Guardo en la DB asi se genera la ID
             _clientRepository.Save(newClient);
 
-            return new ServiceResponse<Client>(newClient, 403, "Usuario registrado con exito");  
+            return new ServiceResponse<Client>(newClient, 201, "Usuario registrado con exito");  
         }
 
         public Client FindByEmail(string email) {
@@ -74,16 +74,18 @@ namespace HomeBanking.Services.Implementations {
         }
 
         public string PasswordHash(string password) {
-            var hmac = new HMACSHA512();
+            using (SHA256 hmac = SHA256.Create()) {
+                byte[] bytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
 
-            byte[] bytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+                // Convierte el array de bytes a un string en formato hexadecimal
+                StringBuilder builder = new StringBuilder();
+                for (int i = 0; i < bytes.Length; i++) {
+                    builder.Append(bytes[i].ToString("x2"));
+                }
+                return builder.ToString();
+            };
 
-            // Convierte el array de bytes a un string en formato hexadecimal
-            StringBuilder builder = new StringBuilder();
-            for (int i = 0; i < bytes.Length; i++) {
-                builder.Append(bytes[i].ToString("x2"));
-            }
-            return builder.ToString();
+            
         }
     }
 }

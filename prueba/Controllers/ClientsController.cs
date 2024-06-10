@@ -123,7 +123,7 @@ namespace prueba.Controllers {
                 }
                 var accountResponse = _accountService.CreateAccount(clientResponse.objectResponse.Id);
 
-                return StatusCode(clientResponse.status,new ClientDTO(clientResponse.objectResponse));
+                return StatusCode(clientResponse.status,new ClientDTO(signup));
 
             }
             catch (Exception ex) {

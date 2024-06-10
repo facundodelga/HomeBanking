@@ -2,11 +2,15 @@ using HomeBanking.Repository;
 using HomeBanking.Repository.Implementations;
 using HomeBanking.Services;
 using HomeBanking.Services.Implementations;
-using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using prueba.Models;
 using prueba.Repository;
 using prueba.Repository.Implementations;
+using System.Text;
+
+var jwtSecretKey = "9Ks3bnBGx8fGJdN7VFnTY8jCDYmq/fR/4V5yVWGzs7Y=";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,13 +24,26 @@ builder.Services.AddDbContext<HomeBankingContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("HomeBankingConexion")
 ));
 
-
 //Agrego servicios de autenticacion
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-      .AddCookie(options => {
-          options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
-          options.LoginPath = new PathString("/index.html");
-      });
+//builder.Services.AddAuthentication()
+//      .AddCookie(options => {
+//          options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+//          options.LoginPath = new PathString("/index.html");
+//      });
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt => { 
+    var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey));
+    var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256Signature);
+
+    opt.RequireHttpsMetadata = false;
+    
+    opt.TokenValidationParameters = new TokenValidationParameters(){
+        IssuerSigningKey = signingKey,
+        ValidateAudience = false,
+        ValidateIssuer = false
+    };
+
+});
 
 //Agrego servicios de autorizacion
 builder.Services.AddAuthorization(options => {
@@ -55,7 +72,7 @@ using (var scope = app.Services.CreateScope()) {
     try {
         var service = scope.ServiceProvider;
         var context = service.GetRequiredService<HomeBankingContext>();
-        InitializerDB.Main(context);
+        //InitializerDB.Main(context);
     }
     catch (Exception ex) {
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
