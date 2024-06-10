@@ -112,8 +112,8 @@ namespace prueba.Controllers {
         }
 
 
-        [HttpPost]
-        public IActionResult Post([FromBody] SignUpDTO signup) {
+        [HttpPost] //registro de nuevo cliente
+        public IActionResult SignUp([FromBody] SignUpDTO signup) {
             try {
                 
                 var clientResponse = _clientService.CreateClient(signup);

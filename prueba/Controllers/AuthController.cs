@@ -6,6 +6,7 @@ using prueba.Models;
 using System.Security.Claims;
 using HomeBanking.DTOS;
 using HomeBanking.Services;
+using HomeBanking.Util;
 
 namespace HomeBanking.Controllers {
     [Route("api/[controller]")]
@@ -20,10 +21,16 @@ namespace HomeBanking.Controllers {
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDTO user) {
+            
             try {
                 Client client = _clientService.FindByEmail(user.Email);
-                if (client == null || !String.Equals(user.Password, client.Password))
+                if (client == null)
                     return StatusCode(401, "User info not found.");
+
+                string passwordHash = _clientService.PasswordHash(user.Password);
+
+                if(string.IsNullOrEmpty(passwordHash) || string.Equals(passwordHash,client.Password))
+                    return StatusCode(401, "User info not valid");
 
                 var claims = new List<Claim>();
 
@@ -60,5 +67,7 @@ namespace HomeBanking.Controllers {
                 return StatusCode(500, ex.Message);
             }
         }
+
+
     }
 }

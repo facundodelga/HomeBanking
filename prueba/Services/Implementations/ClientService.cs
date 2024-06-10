@@ -4,6 +4,8 @@ using HomeBanking.Models;
 using prueba.DTOS;
 using prueba.Models;
 using prueba.Repository;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace HomeBanking.Services.Implementations {
 
@@ -41,9 +43,11 @@ namespace HomeBanking.Services.Implementations {
                 return new ServiceResponse<Client>(null, 403, "Usuario existente");
             }
 
+            string passwordHash = PasswordHash(signup.Password);
+
             Client newClient = new Client {
                 Email = signup.Email,
-                Password = signup.Password,
+                Password = passwordHash,
                 FirstName = signup.FirstName,
                 LastName = signup.LastName,
             };
@@ -69,6 +73,17 @@ namespace HomeBanking.Services.Implementations {
             _clientRepository.Save(client);
         }
 
-        
+        public string PasswordHash(string password) {
+            var hmac = new HMACSHA512();
+
+            byte[] bytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+            // Convierte el array de bytes a un string en formato hexadecimal
+            StringBuilder builder = new StringBuilder();
+            for (int i = 0; i < bytes.Length; i++) {
+                builder.Append(bytes[i].ToString("x2"));
+            }
+            return builder.ToString();
+        }
     }
 }

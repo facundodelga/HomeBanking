@@ -16,5 +16,7 @@ namespace HomeBanking.Services {
         List<ClientDTO> ClientsToDTOs(IEnumerable<Client> clients);
         ClientDTO ClientToDTO(Client client);
 
+        string PasswordHash(string password);
+
     }
 }
