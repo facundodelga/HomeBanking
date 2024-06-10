@@ -10,6 +10,6 @@ namespace HomeBanking.Services {
         Card FindByNumber(string number);
         CardDTO CardToDTO(Card card);
         List<CardDTO> CardsToDTOs(IEnumerable<Card> cards);
-        (Card card,int status) CreateCard(long clientId, string cardHolder, CreateCardDTO createCardDTO);
+        ServiceResponse<Card> CreateCard(long clientId, string cardHolder, CreateCardDTO createCardDTO);
     }
 }

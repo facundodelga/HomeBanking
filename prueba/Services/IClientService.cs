@@ -1,4 +1,5 @@
 ﻿using HomeBanking.DTOS;
+using HomeBanking.Models;
 using prueba.Controllers;
 using prueba.DTOS;
 using prueba.Models;
@@ -10,7 +11,7 @@ namespace HomeBanking.Services {
         Client FindById(long id);
         Client FindByEmail(string email);
 
-        (Client client,int status) CreateClient(SignUpDTO signup);
+        ServiceResponse<Client> CreateClient(SignUpDTO signup);
 
         List<ClientDTO> ClientsToDTOs(IEnumerable<Client> clients);
         ClientDTO ClientToDTO(Client client);

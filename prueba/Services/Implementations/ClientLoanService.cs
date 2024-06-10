@@ -23,37 +23,37 @@ namespace HomeBanking.Services.Implementations
             _transactionRepository = transactionRepository;
         }
 
-        public (ClientLoan cl, int status) MakeLoan(LoanApplicationDTO loanDTO, string email) {
+        public ServiceResponse<ClientLoan> MakeLoan(LoanApplicationDTO loanDTO, string email) {
 
             //Verificar que el prestamo exista
             var loan = _loanRepository.FindById(loanDTO.LoanId);
             if (loan == null) {
-                return (null, 403);
+                return new ServiceResponse<ClientLoan>(null, 403, "Tipo de prestamo no existente");
             }
 
             //Que el monto NO sea 0 y que no sobrepase el maximo autorizado
             if (loanDTO.Amount <= 0 || loanDTO.Amount > loan.MaxAmount)
-                return (null, 403);
+                return new ServiceResponse<ClientLoan>(null, 403, "monto 0 o sobrepasa el maximo autorizado");
 
             //Que los payments no lleguen vacios.
             if (loanDTO.Payments.IsNullOrEmpty())
-                return (null, 403);
+                return new ServiceResponse<ClientLoan>(null, 403, "Campo payment vacio");
 
             //si la cantidad de cuotas no esta disponible para el prestamo solicitado
             HashSet<string> payments = new HashSet<string>(loan.Payments.Split(','));
             if (!payments.Contains(loanDTO.Payments))
-                return (null, 403);
+                return new ServiceResponse<ClientLoan>(null, 403, "Cantidad de cuotas no disponible");
 
             //Que exista la cuenta de destino
             var account = _accountRepository.FindByNumber(loanDTO.ToAccountNumber);
             if (account == null) {
-                return (null, 403);
+                return new ServiceResponse<ClientLoan>(null, 403, "No existe la cuenta destino");
             }
 
             //Que la cuenta de destino pertenezca al Cliente autentificado
             var client = _clientRepository.FindById(account.ClientId);
             if (client == null || client.Email != email) {
-                return (null, 403);
+                return new ServiceResponse<ClientLoan>(null, 403, "Cuenta no perteneciente al usuario autentificado");
             }
 
             var creditTransaction = new Transaction {
@@ -75,7 +75,7 @@ namespace HomeBanking.Services.Implementations
 
             _clientLoanRepository.save(clientLoan);
 
-            return (clientLoan, 201);
+            return new ServiceResponse<ClientLoan>(clientLoan, 201, "Prestamo creado con exito");
         }
 
         public void save(ClientLoan clientLoan) {

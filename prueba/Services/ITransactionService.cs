@@ -11,6 +11,6 @@ namespace HomeBanking.Services
         Transaction FindById(long id);
         TransactionDTO TransactionToDTO(Transaction t);
         List<TransactionDTO> transactionsToDTOs(IEnumerable<Transaction> transactions);
-        (Transaction response, int status) MakeTransaction(string email, TransferDTO transfer);
+        ServiceResponse<Transaction> MakeTransaction(string email, TransferDTO transfer);
     }
 }

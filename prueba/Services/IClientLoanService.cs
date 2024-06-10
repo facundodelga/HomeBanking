@@ -5,7 +5,7 @@ namespace HomeBanking.Services
 {
     public interface IClientLoanService
     {
-        public void save(ClientLoan clientLoan);
-        public (ClientLoan cl, int status) MakeLoan(LoanApplicationDTO loanDTO, string email);
+        void save(ClientLoan clientLoan);
+        ServiceResponse<ClientLoan> MakeLoan(LoanApplicationDTO loanDTO, string email);
     }
 }

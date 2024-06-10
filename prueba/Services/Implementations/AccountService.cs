@@ -1,9 +1,11 @@
 ﻿using HomeBanking.Exceptions;
+using HomeBanking.Models;
 using HomeBanking.Repository;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using prueba.DTOS;
 using prueba.Models;
 using prueba.Repository;
+using System.Security.Principal;
 
 namespace HomeBanking.Services.Implementations
 {
@@ -40,7 +42,7 @@ namespace HomeBanking.Services.Implementations
             return _accountRepository.FindByNumber(num);
         }
 
-        public (Account account,int status) CreateAccount(long clientId)
+        public ServiceResponse<Account> CreateAccount(long clientId)
         {
             var accounts = GetAccountsByClient(clientId);
             if (accounts.Count() < 3)
@@ -65,11 +67,11 @@ namespace HomeBanking.Services.Implementations
 
                 Save(newAccount);
 
-                return (newAccount,201);
+                return new ServiceResponse<Account>(newAccount,201,"Cuenta creada con exito");
             }
             else
             {
-                return (null,403);
+                return new ServiceResponse<Account>(null, 403, "Ya tiene 3 cuentas");
             }
         }
     }

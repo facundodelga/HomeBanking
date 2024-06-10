@@ -27,31 +27,31 @@ namespace HomeBanking.Services.Implementations {
             return _transactionRepository.GetAllTransactions();
         }
 
-        public (Transaction response, int status) MakeTransaction(string email,TransferDTO transfer) {
+        public ServiceResponse<Transaction> MakeTransaction(string email,TransferDTO transfer) {
 
             if(transfer.ToAccountNumber.IsNullOrEmpty() || transfer.FromAccountNumber.IsNullOrEmpty()
                 || transfer.Amount <= 0 || transfer.Description.IsNullOrEmpty()) 
-                return (null, 403);
+                return new ServiceResponse<Transaction>(null,403,"Hay un campo vacio.");
             
             Account fromAccount = _accountRepository.FindByNumber(transfer.FromAccountNumber);
             if (fromAccount == null) {
-                return (null, 403);
+                return new ServiceResponse<Transaction>(null, 403, "No existe la cuenta emisora");
             }
 
             //Voy a validar que la cuenta pertenezca al que hace la transferencia
             Client client = _clientRepository.FindById(fromAccount.ClientId);
             if (client == null || client.Email != email) {
-                return (null, 403);
+                return new ServiceResponse<Transaction>(null, 403, "La cuenta no pertenece al registrado");
             }
 
             Account toAccount = _accountRepository.FindByNumber(transfer.ToAccountNumber);
             if (toAccount == null || fromAccount.Number == toAccount.Number) {
-                return (null, 403);
+                return new ServiceResponse<Transaction>(null, 403, "No existe la cuenta receptora");
             }
 
             //si la cuenta no tiene los fondos
             if (fromAccount.Balance - transfer.Amount < 0) {
-                return (null,403);
+                return new ServiceResponse<Transaction>(null, 403, "La cuenta no tiene fondos");
             }
 
             fromAccount.Balance -= transfer.Amount;
@@ -79,7 +79,7 @@ namespace HomeBanking.Services.Implementations {
             _accountRepository.Save(fromAccount);
             _accountRepository.Save(toAccount);
 
-            return (newDebitT, 201);
+            return new ServiceResponse<Transaction>(newDebitT, 403, "Transaccion exitosa");
         }
 
         public void Save(Transaction transaction) {

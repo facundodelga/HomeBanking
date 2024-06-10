@@ -1,5 +1,6 @@
 ﻿using HomeBanking.DTOS;
 using HomeBanking.Exceptions;
+using HomeBanking.Models;
 using prueba.DTOS;
 using prueba.Models;
 using prueba.Repository;
@@ -28,16 +29,16 @@ namespace HomeBanking.Services.Implementations {
             return new ClientDTO(client);
         }
 
-        public (Client client, int status) CreateClient(SignUpDTO signup) {
+        public ServiceResponse<Client> CreateClient(SignUpDTO signup) {
 
             if (String.IsNullOrEmpty(signup.Email) || String.IsNullOrEmpty(signup.Password) || String.IsNullOrEmpty(signup.FirstName) || String.IsNullOrEmpty(signup.LastName))
-                return (null,403);
+                return new ServiceResponse<Client>(null,403,"Algun campo vacio");
             
             //buscamos si ya existe el usuario
             Client user = _clientRepository.FindByEmail(signup.Email);
 
             if (user != null) {
-                return (null,403);
+                return new ServiceResponse<Client>(null, 403, "Usuario existente");
             }
 
             Client newClient = new Client {
@@ -49,7 +50,7 @@ namespace HomeBanking.Services.Implementations {
             //Guardo en la DB asi se genera la ID
             _clientRepository.Save(newClient);
 
-            return (newClient,201); 
+            return new ServiceResponse<Client>(newClient, 403, "Usuario registrado con exito");  
         }
 
         public Client FindByEmail(string email) {
