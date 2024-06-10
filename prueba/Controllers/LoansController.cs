@@ -13,17 +13,19 @@ namespace HomeBanking.Controllers {
     [ApiController]
     public class LoansController : ControllerBase {
         
-        private IClientLoanService _loanService;
-        public LoansController(IClientLoanService clientLoanService)
+        private IClientLoanService _clientLoansService;
+        private ILoanService _loanService;
+        public LoansController(IClientLoanService clientLoanService, ILoanService loanService)
         {
-            _loanService = clientLoanService;
+            _clientLoansService = clientLoanService;
+            _loanService = loanService;
+
         }
 
         [HttpGet]
-        
         public IActionResult Get() {
             try {
-                var loans = loanService.GetAllLoans();
+                var loans = _loanService.GetAllLoans();
 
                 var loansDTO = new List<LoanDTO>();
 
@@ -41,10 +43,9 @@ namespace HomeBanking.Controllers {
         }
 
         [HttpGet("{id}")]
-        [Authorize(Policy = "AdminOnly")]
         public IActionResult Get(long id) {
             try {
-                var loan = loanRepository.FindById(id);
+                var loan = _loanService.FindById(id);
                 if (loan == null) {
                     return Forbid();
                 }
@@ -66,7 +67,7 @@ namespace HomeBanking.Controllers {
                     return StatusCode(403, "Forbidden");
                 }
                 
-                var loanResponse = _loanService.MakeLoan(loanDTO,email);
+                var loanResponse = _clientLoansService.MakeLoan(loanDTO,email);
                 if (loanResponse.objectResponse == null)
                     return StatusCode(loanResponse.status, loanResponse.message);
 
