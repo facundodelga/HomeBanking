@@ -6,7 +6,6 @@ using prueba.Models;
 using System.Security.Claims;
 using HomeBanking.DTOS;
 using HomeBanking.Services;
-using HomeBanking.Util;
 using Microsoft.IdentityModel.Tokens;
 
 namespace HomeBanking.Controllers {
