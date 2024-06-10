@@ -16,6 +16,7 @@ namespace HomeBanking.Controllers {
         }
 
         [HttpGet]
+
         public IActionResult Get() {
             try {
                 var loans = loanRepository.GetAllLoans();

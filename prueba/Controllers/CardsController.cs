@@ -2,6 +2,7 @@
 using HomeBanking.Repository;
 using HomeBanking.Repository.Implementations;
 using HomeBanking.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using prueba.DTOS;
@@ -17,6 +18,7 @@ namespace HomeBanking.Controllers {
         }
 
         [HttpGet]
+        [Authorize(Policy = "AdminOnly")]
         public IActionResult Get() {
             try {
                 var cards = cardService.GetAllCards();
@@ -30,6 +32,7 @@ namespace HomeBanking.Controllers {
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "AdminOnly")]
         public IActionResult Get(long id) {
             try {
                 var card = cardService.FindById(id);

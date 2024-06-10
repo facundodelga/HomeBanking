@@ -1,4 +1,5 @@
 ﻿using HomeBanking.Repository;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using prueba.DTOS;
@@ -15,6 +16,7 @@ namespace HomeBanking.Controllers {
 
 
         [HttpGet]
+        [Authorize(Policy = "AdminOnly")]
         public IActionResult Get() {
             try {
                 var accounts = _accountRepository.GetAllAccounts();
@@ -35,6 +37,7 @@ namespace HomeBanking.Controllers {
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "AdminOnly")]
         public IActionResult Get(long id) {
             try {
                 var account = _accountRepository.FindById(id);

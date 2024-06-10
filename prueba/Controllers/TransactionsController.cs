@@ -65,7 +65,7 @@ namespace HomeBanking.Controllers {
                 //MakeTransaction va a devolver la transaccion de Debito y el status 
                 var transactionReponse = _transactionService.MakeTransaction(email,transfer);
                 if (transactionReponse.response == null) {
-                    return StatusCode(403, "Not valid data");
+                    return StatusCode(transactionReponse.status, "Not valid data");
                 }
 
                 var transactionDTO = new TransactionDTO(transactionReponse.response);

@@ -2,7 +2,6 @@
 using HomeBanking.Models;
 using HomeBanking.Repository;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using prueba.Models;
 using prueba.Repository;
 
@@ -29,6 +28,11 @@ namespace HomeBanking.Services.Implementations {
         }
 
         public (Transaction response, int status) MakeTransaction(string email,TransferDTO transfer) {
+
+            if(transfer.ToAccountNumber.IsNullOrEmpty() || transfer.FromAccountNumber.IsNullOrEmpty()
+                || transfer.Amount <= 0 || transfer.Description.IsNullOrEmpty()) 
+                return (null, 403);
+            
             Account fromAccount = _accountRepository.FindByNumber(transfer.FromAccountNumber);
             if (fromAccount == null) {
                 return (null, 403);
@@ -45,13 +49,10 @@ namespace HomeBanking.Services.Implementations {
                 return (null, 403);
             }
 
-            //si el monto es menor o igual a 0 o si la cuenta no tiene los fondos
-            if (transfer.Amount <= 0 || fromAccount.Balance - transfer.Amount < 0) {
+            //si la cuenta no tiene los fondos
+            if (fromAccount.Balance - transfer.Amount < 0) {
                 return (null,403);
             }
-
-            if (transfer.Description.IsNullOrEmpty())
-                return (null, 403);
 
             fromAccount.Balance -= transfer.Amount;
             toAccount.Balance += transfer.Amount;
