@@ -11,7 +11,7 @@ namespace prueba.Models {
                 var clients = new Client[]
                 {
                     new Client{FirstName="Victor",LastName="Coronado",Email="vcoronado@gmail.com",Password="123"},
-                    new Client{FirstName="Juan",LastName="Perez",Email="juan@gmail.com",Password="123"},
+                    new Client{FirstName="Facundo",LastName="Delgado",Email="facudelga3@gmail.com",Password="123"},
                     new Client{FirstName="Maria",LastName="Lopez",Email="maria@gmail.com",Password="123" },
                     new Client { FirstName = "Laureano", LastName = "Adreotti", Email = "laureano@mindhub.com", Password = "laureanoA2024?*" },
                     new Client { FirstName = "Manuel", LastName = "Figueira", Email = "manuel@mindhub.com", Password = "manuelF2024?*" }
@@ -207,6 +207,12 @@ namespace prueba.Models {
                             CreationDate=DateTime.Now,
                             ClientId = cliente.Id,
                             Balance=10000
+                        },
+
+                        new Account{Number = "VIN003",
+                            CreationDate=DateTime.Now,
+                            ClientId = 2,
+                            Balance=100000000
                         }
 
                     };
