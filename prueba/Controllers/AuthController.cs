@@ -7,6 +7,7 @@ using System.Security.Claims;
 using HomeBanking.DTOS;
 using HomeBanking.Services;
 using HomeBanking.Util;
+using Microsoft.IdentityModel.Tokens;
 
 namespace HomeBanking.Controllers {
     [Route("api/[controller]")]
@@ -23,14 +24,19 @@ namespace HomeBanking.Controllers {
         public async Task<IActionResult> Login([FromBody] LoginDTO user) {
             
             try {
+                if (user.Email.IsNullOrEmpty() || user.Password.IsNullOrEmpty()) { 
+                    return StatusCode(403, "Null or empty fields");
+                }
+
                 Client client = _clientService.FindByEmail(user.Email);
                 if (client == null)
-                    return StatusCode(401, "User info not found.");
+                    return StatusCode(401, "We couldn't validate your email or password");
 
                 string passwordHash = _clientService.PasswordHash(user.Password);
 
-                if(string.IsNullOrEmpty(passwordHash) || string.Equals(passwordHash,client.Password))
-                    return StatusCode(401, "User info not valid");
+                //comparo los hash de las contraseñas
+                if(string.Equals(passwordHash,client.Password))
+                    return StatusCode(401, "We couldn't validate your email or password");
 
                 var claims = new List<Claim>();
 
