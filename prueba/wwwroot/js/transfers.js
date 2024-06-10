@@ -20,7 +20,6 @@ var app = new Vue({
                 this.clientAccounts = response.data;
             })
             .catch((error) => {
-                console.log(error)
                 this.errorMsg = "Error getting data";
                 this.errorToats.show();
             })
@@ -68,7 +67,6 @@ var app = new Vue({
                 this.okmodal.show();
             })
             .catch((error) =>{
-                console.log(error.response.data)
                 this.errorMsg = error.response.data;  
                 this.errorToats.show();
             })
