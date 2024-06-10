@@ -32,7 +32,7 @@ namespace HomeBanking.Controllers {
         }
 
         [HttpGet("{id}")]
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "ClientOnly")]
         public IActionResult Get(long id) {
             try {
                 var card = cardService.FindById(id);

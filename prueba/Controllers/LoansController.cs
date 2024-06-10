@@ -12,19 +12,11 @@ namespace HomeBanking.Controllers {
     [Route("api/[controller]")]
     [ApiController]
     public class LoansController : ControllerBase {
-        private ILoanRepository loanRepository;
-        private IAccountService _accountService;
-        private IClientService _clientService;
-        private IClientLoanRepository _clientLoanRepository;
-        private ITransactionRepository _transactionRepository;
-
-        public LoansController(ILoanRepository loanRepository, IAccountService accountService, IClientService clientService, IClientLoanRepository clientLoanRepository, ITransactionRepository transactionRepository)
+        
+        private IClientLoanService _loanService;
+        public LoansController(IClientLoanService clientLoanService)
         {
-            this.loanRepository = loanRepository;
-            this._accountService = accountService;
-            _clientService = clientService;
-            _clientLoanRepository = clientLoanRepository;
-            _transactionRepository = transactionRepository;
+            _loanService = clientLoanService;
         }
 
         [HttpGet]
@@ -74,58 +66,13 @@ namespace HomeBanking.Controllers {
                     return StatusCode(403, "Forbidden");
                 }
                 
-                //Verificar que el prestamo exista
-                var loan = loanRepository.FindById(loanDTO.LoanId);
-                if (loan == null) {
-                    return StatusCode(403, "No se encontro loan por ID");
-                }
+                var loanResponse = _loanService.MakeLoan(loanDTO,email);
+                if (loanResponse.cl == null)
+                    return StatusCode(loanResponse.status, "Data not valid");
 
-                //Que el monto NO sea 0 y que no sobrepase el maximo autorizado
-                if (loanDTO.Amount <= 0 || loanDTO.Amount > loan.MaxAmount)
-                    return StatusCode(403, "el monto es mas que lo maximo");
+                var clDTO = new ClientLoanDTO(loanResponse.cl);
 
-                //Que los payments no lleguen vacios.
-                if (loanDTO.Payments.IsNullOrEmpty())
-                    return StatusCode(403, "payment llego vacio");
-
-                //si la cantidad de cuotas no esta disponible para el prestamo solicitado
-                HashSet<string> payments = new HashSet<string>(loan.Payments.Split(','));
-                if (!payments.Contains(loanDTO.Payments))
-                    return StatusCode(403, "los payments no corresponden");
-
-                //Que exista la cuenta de destino
-                var account = _accountService.FindByNumber(loanDTO.ToAccountNumber);
-                if (account == null) {
-                    return StatusCode(403, "No se encontro cuenta");
-                }
-
-                //Que la cuenta de destino pertenezca al Cliente autentificado
-                var client = _clientService.FindById(account.ClientId);
-                if (client == null || client.Email != email) {
-                    return StatusCode(403, "cliente distinto al autenticado");
-                }
-
-                var creditTransaction = new Transaction {
-                    AccountId = account.Id,
-                    Type = TransactionType.CREDIT,
-                    Amount = loanDTO.Amount,
-                    Date = DateTime.Now,
-                    Description = loan.Name + " - Loan Approved"
-                };
-
-                _transactionRepository.Save(creditTransaction);
-
-                var clientLoan = new ClientLoan() {
-                    Amount = loanDTO.Amount * 1.20, //Cuando guardes clientLoan el monto debes multiplicarlo por el 20%
-                    LoanId = loan.Id,
-                    ClientId = client.Id,
-                    Payments = loanDTO.Payments,
-                };
-
-                _clientLoanRepository.save(clientLoan);
-
-
-                return Ok(loanDTO);
+                return StatusCode(loanResponse.status,clDTO);
             }
             catch (Exception ex) {
                 return StatusCode(500, ex.Message);

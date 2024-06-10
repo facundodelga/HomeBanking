@@ -37,7 +37,7 @@ namespace HomeBanking.Controllers {
         }
 
         [HttpGet("{id}")]
-        [Authorize(Policy = "AdminOnly")]
+        [Authorize(Policy = "ClientOnly")]
         public IActionResult Get(long id) {
             try {
                 var transaction = _transactionService.FindById(id);

@@ -16,6 +16,7 @@ namespace HomeBanking.Controllers {
 
 
         [HttpGet]
+        [Authorize(Policy = "AdminOnly")]
         public IActionResult Get() {
             try {
                 var accounts = _accountRepository.GetAllAccounts();
@@ -36,6 +37,7 @@ namespace HomeBanking.Controllers {
         }
 
         [HttpGet("{id}")]
+        [Authorize(Policy = "ClientOnly")]
         public IActionResult Get(long id) {
             try {
                 var account = _accountRepository.FindById(id);
