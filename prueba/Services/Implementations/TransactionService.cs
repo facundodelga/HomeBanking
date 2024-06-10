@@ -34,6 +34,9 @@ namespace HomeBanking.Services.Implementations {
                 return (null, 403);
             }
 
+
+
+
             //Voy a validar que la cuenta pertenezca al que hace la transferencia
             Client client = _clientRepository.FindById(fromAccount.ClientId);
             if (client == null || client.Email != email) {
