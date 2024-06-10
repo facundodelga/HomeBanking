@@ -61,7 +61,7 @@ namespace HomeBanking.Services.Implementations {
                 Amount = transfer.Amount,
                 Type = TransactionType.DEBIT,
                 AccountId = fromAccount.Id,
-                Description = transfer.Description,
+                Description = transfer.Description + " - To: " + toAccount.Number,
                 Date = DateTime.Now,
             };
 
@@ -69,7 +69,7 @@ namespace HomeBanking.Services.Implementations {
                 Amount = transfer.Amount,
                 Type = TransactionType.CREDIT,
                 AccountId = toAccount.Id,
-                Description = transfer.Description,
+                Description = transfer.Description + " - From: " + fromAccount.Number,
                 Date = DateTime.Now,
             };
 
