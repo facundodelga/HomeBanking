@@ -74,7 +74,8 @@ using (var scope = app.Services.CreateScope()) {
     try {
         var service = scope.ServiceProvider;
         var context = service.GetRequiredService<HomeBankingContext>();
-        //InitializerDB.Main(context);
+        var clientService = service.GetRequiredService<IClientService>();
+        InitializerDB.Main(context,clientService);
     }
     catch (Exception ex) {
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
