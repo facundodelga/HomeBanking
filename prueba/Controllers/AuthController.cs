@@ -55,7 +55,7 @@ namespace HomeBanking.Controllers {
 
 
                 await HttpContext.SignInAsync(
-                    JwtBearerDefaults.AuthenticationScheme,
+                    CookieAuthenticationDefaults.AuthenticationScheme,
                     new ClaimsPrincipal(claimsIdentity));
 
                 return Ok();
