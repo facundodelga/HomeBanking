@@ -25,24 +25,10 @@ builder.Services.AddDbContext<HomeBankingContext>(options =>
 ));
 
 //Agrego servicios de autenticacion
-//builder.Services.AddAuthentication()
-//      .AddCookie(options => {
-//          options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
-//          options.LoginPath = new PathString("/index.html");
-//      });
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt => {
-    var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey));
-    var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256Signature);
-
-    opt.RequireHttpsMetadata = false;
-    
-    opt.TokenValidationParameters = new TokenValidationParameters(){
-        IssuerSigningKey = signingKey,
-        ValidateAudience = false,
-        ValidateIssuer = false,
-    };
-
+builder.Services.AddAuthentication()
+      .AddCookie(options => {
+          options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+          options.LoginPath = new PathString("/index.html");
 });
 
 //Agrego servicios de autorizacion
