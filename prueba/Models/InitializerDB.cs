@@ -1,20 +1,25 @@
 ﻿using HomeBanking.Models;
+using HomeBanking.Services;
+using HomeBanking.Services.Implementations;
 
 namespace prueba.Models {
     public class InitializerDB {
 
         
-        public static void Main(HomeBankingContext context) {
+        public static void Main(HomeBankingContext context, IClientService clientService) {
 
 
             if (!context.Clients.Any()) { // Si la tabla esta vacia entro
+                var password = clientService.PasswordHash("123");
+                var password2 = clientService.PasswordHash("mindhubpass");
                 var clients = new Client[]
                 {
-                    new Client{FirstName="Victor",LastName="Coronado",Email="vcoronado@gmail.com",Password="123"},
-                    new Client{FirstName="Facundo",LastName="Delgado",Email="facudelga3@gmail.com",Password="123"},
-                    new Client{FirstName="Maria",LastName="Lopez",Email="maria@gmail.com",Password="123" },
-                    new Client { FirstName = "Laureano", LastName = "Adreotti", Email = "laureano@mindhub.com", Password = "laureanoA2024?*" },
-                    new Client { FirstName = "Manuel", LastName = "Figueira", Email = "manuel@mindhub.com", Password = "manuelF2024?*" }
+
+                    new Client{FirstName="Victor",LastName="Coronado",Email="vcoronado@gmail.com",Password=password},
+                    new Client{FirstName="Facundo",LastName="Delgado",Email="facudelga3@gmail.com",Password=password},
+                    new Client{FirstName="Maria",LastName="Lopez",Email="maria@gmail.com",Password=password },
+                    new Client { FirstName = "Laureano", LastName = "Adreotti", Email = "laureano@mindhub.com", Password = password2 },
+                    new Client { FirstName = "Manuel", LastName = "Figueira", Email = "manuel@mindhub.com", Password = password2 }
                 };
 
                 context.Clients.AddRange(clients);
