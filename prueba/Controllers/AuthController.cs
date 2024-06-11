@@ -61,19 +61,19 @@ namespace HomeBanking.Controllers {
 
                 var tokenDescriptor = new SecurityTokenDescriptor() {
                     Subject = claimsIdentity,
-                    Expires = DateTime.UtcNow.AddMinutes(5),
+                    Expires = DateTime.UtcNow.AddMinutes(1),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(byteKey),SecurityAlgorithms.HmacSha256Signature),
                     Issuer = "HB-MH",
                     Audience = "Localhost"
                 };
 
-                var token = tokenHandler.CreateToken(tokenDescriptor);
-
+                var tokenConfig = tokenHandler.CreateToken(tokenDescriptor);
+                var token = tokenHandler.WriteToken(tokenConfig);
                 //await HttpContext.SignInAsync(
                 //    JwtBearerDefaults.AuthenticationScheme,
                 //    new ClaimsPrincipal(claimsIdentity));
 
-                return Ok(new JwtSecurityTokenHandler().WriteToken(token));
+                return Ok(token);
 
             }
             catch (Exception ex) {
