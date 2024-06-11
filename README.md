@@ -1,6 +1,6 @@
 # Proyecto Homebanking
 
-Este proyecto es una aplicación web de homebanking desarrollada en .NET Core y Vue.js. Permite a los usuarios registrarse, iniciar sesión, crear cuentas bancarias, realizar transferencias entre cuentas, solicitar préstamos y gestionar sus tarjetas de crédito/débito.
+Este proyecto es una aplicación web de homebanking desarrollada en .NET Core para MindHub. Permite a los usuarios registrarse, iniciar sesión, crear cuentas bancarias, realizar transferencias entre cuentas, solicitar préstamos y gestionar sus tarjetas de crédito/débito.
 
 ## Características principales
 
