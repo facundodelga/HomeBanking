@@ -31,7 +31,7 @@ builder.Services.AddDbContext<HomeBankingContext>(options =>
 //          options.LoginPath = new PathString("/index.html");
 //      });
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt => { 
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt => {
     var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey));
     var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256Signature);
 
@@ -40,7 +40,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     opt.TokenValidationParameters = new TokenValidationParameters(){
         IssuerSigningKey = signingKey,
         ValidateAudience = false,
-        ValidateIssuer = false
+        ValidateIssuer = false,
     };
 
 });
