@@ -1,5 +1,7 @@
 Proyecto Homebanking
+
 Este proyecto es una aplicación web de homebanking desarrollada en .NET Core y Vue.js. Permite a los usuarios registrarse, iniciar sesión, crear cuentas bancarias, realizar transferencias entre cuentas, solicitar préstamos y gestionar sus tarjetas de crédito/débito.
+
 Características principales
 
 Registro e inicio de sesión de usuarios
@@ -10,6 +12,7 @@ Creación de tarjetas de crédito y débito (límite de 3 tarjetas por tipo)
 Visualización del historial de transacciones por cuenta
 
 Tecnologías utilizadas
+
 
 Backend: .NET Core, Entity Framework Core, ASP.NET Core Web API
 Frontend: Vue.js, Axios, Bootstrap
