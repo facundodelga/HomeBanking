@@ -12,6 +12,8 @@ using System.Text;
 
 var jwtSecretKey = "9Ks3bnBGx8fGJdN7VFnTY8jCDYmq/fR/4V5yVWGzs7Y=";
 
+
+//Patron Builder
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

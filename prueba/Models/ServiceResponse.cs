@@ -1,5 +1,5 @@
 ﻿namespace HomeBanking.Models {
-    public class ServiceResponse<T> { //Patron Result
+    public class ServiceResponse<T> { //Patron Result a medias
         public T objectResponse;
         public int status;
         public string message;
