@@ -39,6 +39,7 @@ namespace prueba.Controllers {
             }
         }
 
+
         [HttpGet("{id}")]
         [Authorize(Policy = "AdminOnly")]
         public IActionResult Get(long id) {
