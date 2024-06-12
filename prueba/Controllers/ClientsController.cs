@@ -183,9 +183,6 @@ namespace prueba.Controllers {
 
                 return Created("",new CardDTO(cardResponse.objectResponse));
             }
-            catch (CardException ex) {
-                return StatusCode(403, ex.Message);
-            }
             catch (Exception ex) {
                 return StatusCode(500, ex.Message);
             }
