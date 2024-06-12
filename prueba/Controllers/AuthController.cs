@@ -69,8 +69,9 @@ namespace HomeBanking.Controllers {
 
                 var tokenConfig = tokenHandler.CreateToken(tokenDescriptor);
                 var token = tokenHandler.WriteToken(tokenConfig);
+                
                 //await HttpContext.SignInAsync(
-                //    JwtBearerDefaults.AuthenticationScheme,
+                //    CookieAuthenticationDefaults.AuthenticationScheme,
                 //    new ClaimsPrincipal(claimsIdentity));
 
                 return Ok(token);
