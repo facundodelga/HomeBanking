@@ -61,7 +61,7 @@ namespace HomeBanking.Controllers {
 
                 var tokenDescriptor = new SecurityTokenDescriptor() {
                     Subject = claimsIdentity,
-                    Expires = DateTime.UtcNow.AddMinutes(1),
+                    Expires = DateTime.UtcNow.AddMinutes(10),
                     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(byteKey),SecurityAlgorithms.HmacSha256Signature),
                     Issuer = "HB-MH",
                     Audience = "Localhost"
