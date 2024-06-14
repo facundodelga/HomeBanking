@@ -15,6 +15,7 @@ Este proyecto es una aplicación web de homebanking desarrollada en .NET Core pa
 
 - Backend: .NET Core, Entity Framework Core, ASP.NET Core Web API
 - Base de datos: SQL Server
+- Cookies, JWT
 
 ## Lecciones aprendidas
 
