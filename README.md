@@ -29,7 +29,7 @@ Durante el desarrollo de este proyecto, hemos aprendido y aplicado conceptos imp
 
 ## Instalación y configuración
 
-1. Clonar el repositorio: `git clone https://github.com/tu-usuario/homebanking.git`
+1. Clonar el repositorio: `git clone https://github.com/facundodelga/homebanking.git`
 2. Configurar la cadena de conexión a la base de datos en `appsettings.json`
 3. Ejecutar las migraciones de Entity Framework Core: `update-database`
 4. Compilar y ejecutar la aplicación backend: `dotnet run`
