@@ -27,26 +27,10 @@ builder.Services.AddDbContext<HomeBankingContext>(options =>
 ));
 
 //Agrego servicios de autenticacion
-//builder.Services.AddAuthentication()
-//      .AddCookie(options => {
-//          options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
-//          options.LoginPath = new PathString("/index.html");
-//      });
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(opt => {
-    var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecretKey));
-    var signingCredentials = new SigningCredentials(signingKey, SecurityAlgorithms.HmacSha256Signature);
-
-    opt.RequireHttpsMetadata = false;
-    
-    opt.TokenValidationParameters = new TokenValidationParameters(){
-        IssuerSigningKey = signingKey,
-        ValidateAudience = false,
-        ValidateIssuer = false,
-        ValidateLifetime = true,
-        ClockSkew = TimeSpan.Zero //asegurar que no haya tolerancia para diferencias de tiempo entre el emisor y el validador del token
-    };
-
+builder.Services.AddAuthentication()
+      .AddCookie(options => {
+          options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+          options.LoginPath = new PathString("/index.html");
 });
 
 //Agrego servicios de autorizacion
@@ -78,7 +62,8 @@ using (var scope = app.Services.CreateScope()) {
         var service = scope.ServiceProvider;
         var context = service.GetRequiredService<HomeBankingContext>();
         var clientService = service.GetRequiredService<IClientService>();
-        InitializerDB.Main(context,clientService);
+        InitializerDB.Main(context, clientService);
+
     }
     catch (Exception ex) {
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();

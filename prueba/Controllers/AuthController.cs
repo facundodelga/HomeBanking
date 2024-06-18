@@ -26,7 +26,6 @@ namespace HomeBanking.Controllers {
         public async Task<IActionResult> Login([FromBody] LoginDTO user) {
             
             try {
-                var key = "9Ks3bnBGx8fGJdN7VFnTY8jCDYmq/fR/4V5yVWGzs7Y=";
 
                 if (user.Email.IsNullOrEmpty() || user.Password.IsNullOrEmpty()) { 
                     return StatusCode(403, "Null or empty fields");
@@ -49,32 +48,17 @@ namespace HomeBanking.Controllers {
 
                 claims.Add(new Claim("Client", client.Email));
 
-                //var claimsIdentity = new ClaimsIdentity(
-                //    claims,
-                //    CookieAuthenticationDefaults.AuthenticationScheme
-                //    );
+                var claimsIdentity = new ClaimsIdentity(
+                    claims,
+                    CookieAuthenticationDefaults.AuthenticationScheme
+                    );
 
-                var tokenHandler = new JwtSecurityTokenHandler();
-                var byteKey = Encoding.UTF8.GetBytes(key);
 
-                var claimsIdentity = new ClaimsIdentity(claims, JwtBearerDefaults.AuthenticationScheme);
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity));
 
-                var tokenDescriptor = new SecurityTokenDescriptor() {
-                    Subject = claimsIdentity,
-                    Expires = DateTime.UtcNow.AddMinutes(10),
-                    SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(byteKey),SecurityAlgorithms.HmacSha256Signature),
-                    Issuer = "HB-MH",
-                    Audience = "Localhost"
-                };
-
-                var tokenConfig = tokenHandler.CreateToken(tokenDescriptor);
-                var token = tokenHandler.WriteToken(tokenConfig);
-                
-                //await HttpContext.SignInAsync(
-                //    CookieAuthenticationDefaults.AuthenticationScheme,
-                //    new ClaimsPrincipal(claimsIdentity));
-
-                return Ok(token);
+                return Ok();
 
             }
             catch (Exception ex) {

@@ -1,5 +1,6 @@
 ﻿using HomeBanking.Models;
 using HomeBanking.Services;
+using HomeBanking.Services.Implementations;
 
 namespace prueba.Models {
     public class InitializerDB {
@@ -13,7 +14,7 @@ namespace prueba.Models {
                 var password2 = clientService.PasswordHash("mindhubpass");
                 var clients = new Client[]
                 {
-                    
+
                     new Client{FirstName="Victor",LastName="Coronado",Email="vcoronado@gmail.com",Password=password},
                     new Client{FirstName="Facundo",LastName="Delgado",Email="facudelga3@gmail.com",Password=password},
                     new Client{FirstName="Maria",LastName="Lopez",Email="maria@gmail.com",Password=password },
