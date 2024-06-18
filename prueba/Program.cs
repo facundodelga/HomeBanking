@@ -12,6 +12,8 @@ using System.Text;
 
 var jwtSecretKey = "9Ks3bnBGx8fGJdN7VFnTY8jCDYmq/fR/4V5yVWGzs7Y=";
 
+
+//Patron Builder
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -37,7 +39,7 @@ builder.Services.AddAuthorization(options => {
     options.AddPolicy("AdminOnly", policy => policy.RequireClaim("Admin"));
 });
 
-//Agrego repositorios para usarlos en los controladores
+//Agrego repositorios para usarlos en los servicios
 builder.Services.AddScoped<IClientRepository, ClientRepository>();
 builder.Services.AddScoped<IAccountRepository, AccountRepository>();
 builder.Services.AddScoped<ITransactionRepository, TransactionRepository>();
@@ -45,6 +47,7 @@ builder.Services.AddScoped<ILoanRepository, LoanRepository>();
 builder.Services.AddScoped<ICardRepository, CardRepository>();
 builder.Services.AddScoped<IClientLoanRepository, ClientLoanRepository>();
 
+//Agrego los servicios para usarlos en los controladores
 builder.Services.AddScoped<IClientService, ClientService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ICardService, CardService>();

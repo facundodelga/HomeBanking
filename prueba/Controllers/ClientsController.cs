@@ -39,6 +39,7 @@ namespace prueba.Controllers {
             }
         }
 
+
         [HttpGet("{id}")]
         [Authorize(Policy = "AdminOnly")]
         public IActionResult Get(long id) {
@@ -64,7 +65,7 @@ namespace prueba.Controllers {
             try {
                 string email = User.FindFirst("Client") != null ? User.FindFirst("Client").Value : string.Empty;
                 if (email == string.Empty) {
-                    return StatusCode(403,"Forbidden");
+                    return StatusCode(401,"Forbidden");
                 }
 
                 Client client = _clientService.FindByEmail(email);
@@ -87,7 +88,7 @@ namespace prueba.Controllers {
             try {
                 string email = User.FindFirst("Client") != null ? User.FindFirst("Client").Value : string.Empty;
                 if (email.IsNullOrEmpty()) {
-                    return StatusCode(403, "Forbidden");
+                    return StatusCode(401, "Forbidden");
                 }
 
                 Client client = _clientService.FindByEmail(email);
@@ -137,7 +138,7 @@ namespace prueba.Controllers {
             try {
                 string email = User.FindFirst("Client") != null ? User.FindFirst("Client").Value : string.Empty;
                 if (email == string.Empty) {
-                    return StatusCode(403, "Forbidden");
+                    return StatusCode(401, "Forbidden");
                 }
 
                 Client client = _clientService.FindByEmail(email);
@@ -166,7 +167,7 @@ namespace prueba.Controllers {
             try {
                 string email = User.FindFirst("Client") != null ? User.FindFirst("Client").Value : string.Empty;
                 if (email == string.Empty) {
-                    return StatusCode(403, "Forbidden");
+                    return StatusCode(401, "Forbidden");
                 }
 
                 Client client = _clientService.FindByEmail(email);

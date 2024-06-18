@@ -59,7 +59,7 @@ namespace HomeBanking.Controllers {
             try {
                 string email = User.FindFirst("Client") != null ? User.FindFirst("Client").Value : string.Empty;
                 if (email == string.Empty) {
-                    return StatusCode(403, "Forbidden");
+                    return StatusCode(401, "Forbidden");
                 }
 
                 //MakeTransaction va a devolver la transaccion de Debito y el status 

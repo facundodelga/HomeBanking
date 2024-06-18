@@ -69,8 +69,8 @@ namespace HomeBanking.Controllers {
         [HttpPost("logout")]
         public async Task<IActionResult> Logout() {
             try {
-                await HttpContext.SignOutAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme);
+                //await HttpContext.SignOutAsync(
+                //CookieAuthenticationDefaults.AuthenticationScheme);
                 return Ok();
             }
             catch (Exception ex) {
